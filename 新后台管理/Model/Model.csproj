@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NBear.Common">
+      <HintPath>..\packages\NBear.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\公共互联网接单平台\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -65,6 +68,7 @@
     <Compile Include="QdJsjbxx.cs" />
     <Compile Include="QdJsjbxxmx.cs" />
     <Compile Include="QuDaoTkModel.cs" />
+    <Compile Include="SYSEntity.cs" />
     <Compile Include="Tjtj\Wjb.cs" />
     <Compile Include="Tjtj\Wjbq.cs" />
     <Compile Include="Tjtj\Wjgz.cs" />

@@ -1,0 +1,68 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>代理商管理</title>
+    <link href="~/Content/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/bootstrap-override.css" rel="stylesheet" />
+</head>
+<body>
+    <div class=" panel-body ">
+        <div class="query-table ">
+            <div class="row">
+                <div class="col-sm-4 col-lg-3">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="txtusername">代理商</label>
+                        <input type="text" maxlength="20" class="form-control" id="txtusername" placeholder="代理商" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-lg-6 col-btn">
+                    <button class="btn btn-default" id="btnquery"><i class="glyphicon glyphicon-search"></i>查询</button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">编号</th>
+                        <th>代理商</th>
+                        <th>卡数量</th>
+                        <th>地区</th>
+                        <th>联系人</th>
+                        <th>电话</th>
+                        <th style="width: 50px;">创建时间</th>
+                        <th style="width:50px;">营业执照</th>
+                        <th style="width: 80px;">身份证</th>
+                        <th style="width: 80px;">状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="user-tb"></tbody>
+            </table>
+        </div>
+        <select class="form-control pagesize" id="pagesize">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+        </select>
+        <ul class="pagination " id="divpage"></ul>
+    </div>
+
+</body>
+<script type="text/javascript">
+    loadjs("../../../Scripts/jquery-1.11.1.min.js");
+    loadjs("../../../Scripts/bootstrap.min.js");
+
+    loadjs("../../../Scripts/WebApi.js");
+    loadjs("../../../Scripts/jqPaginator.js");
+    loadjs("../../../Scripts/layer.js");
+
+    loadjs("user.js");
+</script>
+</html>

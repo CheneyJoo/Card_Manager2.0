@@ -43,3 +43,10 @@ D:\Code\新后台管理\Model\obj\Debug\Model.csproj.CoreCompileInputs.cache
 D:\Code\新后台管理\Model\obj\Debug\Model.csproj.CopyComplete
 D:\Code\新后台管理\Model\obj\Debug\Model.dll
 D:\Code\新后台管理\Model\obj\Debug\Model.pdb
+H:\海建外单\CodeV2.0\新后台管理\Model\bin\Debug\Model.dll
+H:\海建外单\CodeV2.0\新后台管理\Model\bin\Debug\Model.pdb
+H:\海建外单\CodeV2.0\新后台管理\Model\bin\Debug\NBear.Common.dll
+H:\海建外单\CodeV2.0\新后台管理\Model\bin\Debug\Newtonsoft.Json.dll
+H:\海建外单\CodeV2.0\新后台管理\Model\obj\Debug\Model.csproj.CopyComplete
+H:\海建外单\CodeV2.0\新后台管理\Model\obj\Debug\Model.dll
+H:\海建外单\CodeV2.0\新后台管理\Model\obj\Debug\Model.pdb
