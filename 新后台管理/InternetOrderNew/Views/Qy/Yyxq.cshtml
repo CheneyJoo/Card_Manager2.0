@@ -1,0 +1,320 @@
+﻿
+@{
+
+}
+@model List<Model.QyygxxModel>
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+            <span class="layui-breadcrumb">
+                <a>企业团检管理</a>
+                <a>企业预约管理</a>
+                <a class="on">预约详情</a>
+            </span>
+            <h3 style="margin-top: 14px; font-weight: bold;">@ViewBag.dwmc</h3>
+            <input type="hidden" id="dwbh" value="@ViewBag.dwbh" />
+        </div>
+    </div>
+    <div class="tool_pannel layui-form">
+
+        <div class="layui-form-item ">
+          
+            <div class="layui-form-inline">
+                <label class="layui-form-label">预约时间：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="yykssj" placeholder="请选择">
+                </div>
+                <label class="layui-form-label" style="margin-right: 10px;">至</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="yyjssj" placeholder="请选择">
+                </div>
+            </div>
+         
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">预约状态：</label>
+                <div class="layui-input-inline">
+                    <select id="sfyy" name="sfyy" onselect="1">
+                        <option value="">请选择</option>
+                        <option value="1">已预约</option>
+                        <option value="0">未预约</option>                     
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label">部门：</label>
+                <div class="layui-input-inline" style="width:150px">
+                    <select name="" id="dept" onselect="1">
+                        <option value="">请选择</option>
+                        @foreach (var item in ViewBag.deptList)
+                        {
+                            <option value="@item.key">@item.values</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">姓名：</label>
+                <div class="layui-input-inline" style="width:150px">
+                    <input type="text" class="layui-input" id="xm" placeholder="">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;" >手机号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="" id="dh">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;" >身份证号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="" id="sfzh">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</button>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-primary" onclick="cz(this)">重置</button>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-blue" onclick="Export()"><i class="iconfont icon-sousuo"></i>导出</button>
+            </div>
+        </div>
+    </div>
+    <div class="table_wrap">
+        @Html.Partial("YyxqPart", Model)
+        <!-- 分页样式 -->
+    </div>
+</div>
+
+<!-- 编辑弹窗 -->
+<div class="edit_dialog">
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名：</label>
+            <div class="layui-input-inline">
+                <input type="hidden" id="i_id" />
+                <input type="text" class="layui-input"  style="background-color:#eee" disabled id="i_xm">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">预约时间：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="i_yysj" >
+            </div>
+        </div>
+       
+       
+        <div class="layui-form-item">
+            <label class="layui-form-label">预约时段：</label>
+            <div class="layui-input-inline">
+                <select name="" id="yysjd" onselect="1">
+                    @foreach (var item in ViewBag.liSjd)
+                    {
+                        <option value="@(item.kssj + "-" + item.jssj)">@(item.kssj + "-" + item.jssj)</option>
+                    }
+                </select>
+
+            </div>
+        </div>
+        <div class="buttonwrap">
+            <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel">取消</a>
+            <a href="javascript:qrxg();" class="layui-btn layui-btn-blue yes" style="width: auto;" id="qrxg">保存</a>
+        </div>
+    </div>
+</div>
+
+<!-- 套餐信息查看 -->
+<div class="moreInfoTab">
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>组合项目编号</th>
+                <th>组合项目名称</th>
+                <th>科室编号</th>
+                <th>科室名称</th>
+                <th>单价</th>
+                <th>性别</th>
+                @*<th>是否妇科</th>*@
+            </tr>
+        </thead>
+        <tbody id="tcdetail"></tbody>
+
+    </table>
+</div>	
+
+
+@section scripts {
+    <script>
+        //查看操作
+        function getMoreInfo(yybh, tcbh, tcmc) {
+
+
+            var url = '@Url.Content("~/Qy/QyTcZhxmIndex")'+"?yybh=" + yybh + "&tcbh=" + tcbh;
+            var id = layer.load(0, { time: false, shade: 0.3 });
+            $.get(url, function (data) {
+
+                $("#tcdetail").html(data);
+                layer.close(id);
+
+                layer.open({
+                    type: 1,
+                    title: [tcmc, 'font-weight:bold;font-size:16px'],
+                    area: ['auto', '400px'],
+                    content: $('.moreInfoTab'),
+                    cancel: function () {
+                        $('.moreInfoTab').hide()
+                    }
+                })
+
+            });
+
+
+        }
+        //编辑操作
+        function edit(xm, ydjh) {
+
+            $("#i_id").val(ydjh);
+            $("#i_xm").val(xm);
+            var i = layer.open({
+                type: 1,
+                title: ['代为预约', 'font-weight:bold;font-size:16px'],
+                area: ['540px', 'auto'],
+                content: $('.edit_dialog'),
+                cancel: function () {
+                    $('.edit_dialog').hide()
+                }
+            });
+
+
+        }
+        //确认预约
+        function qrxg() {
+            var page = $(".on").html();
+
+            $.ajax({
+                url:'@Url.Content("~/Qy/Dyy")',
+                type: 'post',
+                dataType: 'json',
+                data: { ydjh: $("#i_id").val(), tjrq: $("#i_yysj").val(), kssj: $("#yysjd").val() },
+                success: function (res) {
+                    if (res.flag) {
+
+                        layer.closeAll();
+                        $('.edit_dialog').hide();
+
+                        layer.msg('预约成功！', {
+                            icon: 1, time: 1000, end: function () {
+                                changePostList(page);
+                            }
+                        });
+
+                    } else {
+                        layer.msg('预约失败', { icon: 2, time: 1000 });
+                    }
+                },
+                error: function () {
+
+                    layer.msg('预约失败！', { icon: 2, time: 1000 });
+                    return;
+
+                }
+            });
+
+        }
+        //取消预约
+        function deleteyy(ydjh)
+        {
+            var page = $(".on").html();
+            $.ajax({
+                url:'@Url.Content("~/Qy/Cancelyy")',
+                type: 'post',
+                dataType: 'json',
+                data: { ydjh:ydjh },
+                success: function (res) {
+                    if (res.flag) {
+
+                        layer.closeAll();
+                        $('.edit_dialog').hide();
+
+                        layer.msg('取消成功！', {
+                            icon: 1, time: 1000, end: function () {
+                                changePostList(page);
+                            }
+                        });
+
+                    } else {
+                        layer.msg('取消失败', { icon: 2, time: 1000 });
+                    }
+                },
+                error: function () {
+
+                    layer.msg('取消失败！', { icon: 2, time: 1000 });
+                    return;
+
+                }
+            });
+        }
+
+        //分页
+		function changePostList(page)
+        {
+		    var dwbh = $("#dwbh").val();
+		    var yykssj = $("#yykssj").val();
+		    var yyjssj = $("#yyjssj").val();
+		    var sfyy = $("#sfyy").val();
+		    var dept=$("#dept").val();
+		    var dh=$("#dh").val();
+		    var xm = $("#xm").val();
+		    var sfzh = $("#sfzh").val();
+
+		    var url = '@Url.Content("~/Qy/Yyxq")'+"?page=" + page + "&dwbh=" + dwbh + "&yykssj=" + yykssj + "&yyjssj=" + yyjssj + "&sfyy=" + sfyy + "&dept=" + dept + "&xm=" + xm + "&dh=" + dh + "&sfzh=" + sfzh;
+		    var id = layer.load(0, { time: false, shade: 0.3 });
+		    $.get(url, function (data) {
+
+		        $(".table_wrap").html(data);
+		        layer.close(id);
+		    });
+		}
+        //导出
+		function Export()
+		{
+		    var dwbh = $("#dwbh").val();
+		    var yykssj = $("#yykssj").val();
+		    var yyjssj = $("#yyjssj").val();
+		    var sfyy = $("#sfyy").val();
+		    var dept = $("#dept").val();
+		    var dh = $("#dh").val();
+		    var xm = $("#xm").val();
+		    var sfzh = $("#sfzh").val();
+
+		    var url =  '@Url.Content("~/Qy/YyxqExportExcel")'+"?&dwbh=" + dwbh + "&yykssj=" + yykssj + "&yyjssj=" + yyjssj + "&sfyy=" + sfyy + "&dept=" + dept + "&xm=" + xm + "&dh=" + dh + "&sfzh=" + sfzh;
+		    location.href = url;
+
+		}
+		layui.use('laydate', function () {
+		    var laydate = layui.laydate;
+		    //执行一个laydate实例
+		    laydate.render({
+		        elem: '#yykssj' //指定元素
+		    });
+		    laydate.render({
+		        elem: '#yyjssj' //指定元素
+		    });
+		    laydate.render({
+		        elem: '#i_yysj' //指定元素
+		    });
+
+		});
+		$(function () {
+		    $('#btnCancel').on("click", function () {
+		        $('.edit_dialog').hide();
+		        layer.closeAll();
+		    });
+		});
+
+    </script>
+}

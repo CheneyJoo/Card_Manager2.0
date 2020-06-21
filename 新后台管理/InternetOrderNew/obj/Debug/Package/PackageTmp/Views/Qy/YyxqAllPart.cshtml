@@ -1,0 +1,61 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<Model.QyygxxModel>
+<table class="layui-table layui-form" lay-skin='nob'>
+    <thead>
+        <tr>
+            <th>医院登记号</th>
+            <th>企业名称</th>
+            <th>姓名</th>
+            <th>部门</th>
+            <th>套餐名称及组合项</th>
+            <th>性别</th>
+            <th>身份证号</th>
+            <th>联系电话</th>
+            <th>预约状态</th>
+            <th>预约日期</th>
+            <th>预约时段</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ydjh</td>
+                <td>@item.dwmc</td>
+                <td>@item.xm</td>
+                <td>@item.dwmc</td>
+                <td><a onclick="getMoreInfo('@(item.yybh)','@item.tcbh','@item.tcmc')" class="text_blue" style="cursor:pointer">@item.tcmc</a></td>
+                <td>@(item.xb == 1 ? "男" : "女")</td>
+                <td>@item.sfzh</td>
+                <td>@item.dh</td>
+                <td>@(item.sfyy == 1 ? "已预约" : "待预约")</td>
+
+
+                @if (item.sfyy == 1)
+                {
+                    <td>@item.yykssj.ToString("yyyy-MM-dd")</td>
+                    <td>@item.yykssj.ToString("HH:mm")-@item.yyjssj.ToString("HH:mm")</td>
+                    <td><a class="text_blue" href="javascript:deleteyy('@item.ydjh')">取消预约</a> </td>
+                }
+                else
+                {
+                    <td>---</td>
+                    <td>---</td>
+                    <td><a class="text_blue" href="javascript:edit('@item.xm','@item.ydjh')">代为预约</a> </td>
+                }
+
+            </tr>
+        }
+    }
+</table>
+@if (Model == null || Model.Count == 0)
+{
+    <div class="data_none"><img src="~/content/assets/images/nothing.png" alt=""></div>
+}
+<!-- 分页样式 -->
+@(ViewBag.Pager)

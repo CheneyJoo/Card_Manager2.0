@@ -1,0 +1,191 @@
+﻿
+@{
+
+}
+@model Model.DdjbxxModel
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+            <span class="layui-breadcrumb">
+                <a href="">第三方平台管理</a>
+                <a href="/qudao/order">渠道订单管理</a>
+            </span>
+        </div>
+    </div>
+    <div id="ddxq_wrap">
+        <div class="box-item">
+            <div class="box-title">订单信息</div>
+            <div class="layui-row">
+                <dl class="layui-col-md3">
+                    <dt>渠道订单号：</dt>
+                    <dd>@Model.dsfdd</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>套餐名称：</dt>
+                    <dd>@Model.tcmc</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>销售价格：</dt>
+                    <dd>￥@Model.tcjg</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>订单日期：</dt>
+                    <dd>@Model.intime.ToString("yyyy-MM-dd")</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>交易流水号：</dt>
+                    <dd>@Model.trade_no</dd>
+                </dl>
+            </div>
+            <div class="layui-row">
+                <dl class="layui-col-md3">
+                    <dt>状态：</dt>
+                    <dd>@Model.ddztms</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>预约日期：</dt>
+                    <dd>@Model.yykssj.ToString("yyyy-MM-dd")</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>平台订单号：</dt>
+                    <dd>@Model.ddbh</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>医院单号：</dt>
+                    <dd>@Model.djlsh</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="box-item">
+            <div class="box-title">用户信息</div>
+            <div class="layui-row">
+                <dl class="layui-col-md3">
+                    <dt>用户姓名：</dt>
+                    <dd>@Model.xm</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>性别：</dt>
+                    <dd>@(Model.xb == 1 ? "男" : "女")</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>联系电话：</dt>
+                    <dd>@Model.dh</dd>
+                </dl>
+            </div>
+            <div class="layui-row">
+                <dl class="layui-col-md3">
+                    <dt>婚姻状态：</dt>
+                    <dd>@(Model.hz == 1 ? "已婚" : "未婚")</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>证件号：</dt>
+                    <dd>@Model.zjhm</dd>
+                </dl>
+                <dl class="layui-col-md3">
+                    <dt>出生日期：</dt>
+                    <dd>@Model.csrq</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="table_wrap table_wrap2">
+            <div class="box-title">项目信息</div>
+            <table class="layui-table" lay-skin='nob'>
+                <thead>
+                    <tr>
+                        <th>组合项目编号</th>
+                        <th>组合项目名称</th>
+                        <th>科室编号</th>
+                        <th>科室名称</th>
+                        <th>单价</th>
+                        <th>是否加项</th>
+                        <th>是否到检</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.zhxmlist)
+                    {
+                    <tr>
+                        <td>@item.zhxmbh</td>
+                        <td>@item.zhxmmc</td>
+                        <td>@item.zhxmksbh</td>
+                        <td>@item.zhxmksmc</td>
+                        <td>@item.jg</td>
+                        <td>@(item.sfjx==1?"是":"否")</td>
+                        <td>@(item.sfdj == 1 ? "是" : "否")</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="c_btns_center">
+        <button class="layui-btn layui-btn-blue" onclick="GoToPrev()">返回上一页</button>
+        @if (Model.ddzt == 2 )
+        {
+             <button class="layui-btn layui-btn-blue" onclick="Yy('@Model.ddbh')">预约</button>
+        }
+        @if (Model.ddzt == 4)
+        {
+            <button class="layui-btn layui-btn-blue" onclick="SaveZt('@Model.ddbh',5)">确认退款</button>
+        }
+        @if (Model.ddzt == 3)
+        {
+            <button class="layui-btn layui-btn-blue" onclick="SaveZt('@Model.ddbh',6)">确认到检</button>
+        }
+        @if (Model.ddzt == 1)
+        {
+            <button class="layui-btn layui-btn-blue" onclick="SaveZt('@Model.ddbh',8)">关闭订单</button>
+        }
+
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        //分页
+		function GoToPrev()
+        {
+		    location.href = '@Url.Content("~/QuDao/Order")';
+		}
+		function Yy(id) {
+		    $.ajax({
+		        url: '@Url.Content("~/QuDao/yy")',
+		        type: 'POST',
+		        dataType: 'json',
+		        data: { id: id },
+		        success: function (res) {
+		            if (res.isSuccess == 0) {
+		                alert('操作成功');
+		                location.reload();
+		            } else {
+		                alert(res.msg);
+		            }
+		        }
+
+		    });
+		}
+        function SaveZt(ddbh,ddzt) {
+            $.ajax({
+                url: '@Url.Content("~/QuDao/BatchComplete")',
+                type: 'post',
+                dataType: 'json',
+                data: { ddbhs: ddbh, ddzt},
+                success: function (res) {
+                    if (res.Code == 200) {                       
+                        alert('操作成功');
+                        location.reload();
+
+                    } else {
+                        alert(res.msg);
+                    }
+                },
+                error: function () {                   
+                    layer.msg('保存失败', { icon: 2, time: 1000 });
+                    return;
+
+                }
+            });
+        }
+    </script>
+}

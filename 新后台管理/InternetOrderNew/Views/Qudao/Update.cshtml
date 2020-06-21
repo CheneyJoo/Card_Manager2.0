@@ -1,0 +1,320 @@
+﻿@{
+    Layout = null;
+}
+@using System.Data
+@using Model
+@using Newtonsoft.Json
+@model XttcbModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>更新套餐信息</title>
+    <link href="~/Content/assets/css/layui.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/formSelects-v4.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Content/assets/formSelects-v4.js"></script>
+    <script src="~/Content/assets/layui.js"></script>
+    <style>
+        .commonwidth {
+            width: 750px;
+        }
+
+        .custom-input {
+            display: inline-block;
+        }
+
+        body {
+            padding: 0 20px;
+            background-color: #f0f2f5;
+            max-height: 850px;
+            overflow-y: scroll;
+        }
+
+        form {
+            padding-top: 25px;
+            border-radius: 3px;
+            background-color: white;
+        }
+
+        .layui-input-block li {
+            height: 150px;
+            width: 150px;
+            padding: 4px;
+            border: 1px solid #D2D2D2;
+            position: relative;
+        }
+
+        .layui-input-block li {
+            float: left;
+            margin-right: 15px;
+        }
+
+            .layui-input-block li div {
+                width: 150px;
+                height: 150px;
+                overflow: hidden;
+            }
+
+            .layui-input-block li button {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: -19px;
+                margin-left: -44px;
+            }
+
+            .layui-input-block li img {
+                width: 150px;
+                height: 150px;
+                display: none;
+                cursor: pointer;
+                transition: transform 1s;
+                -moz-transition: transform 1s;
+                -webkit-transition: transform 1s;
+                -o-transition: transform 1s;
+            }
+
+                .layui-input-block li img:hover {
+                    transform: scale(2);
+                    -moz-transform: scale(2);
+                    -webkit-transform: scale(2);
+                    -o-transform: scale(2);
+                }
+
+            .layui-input-block li span {
+                width: 25px;
+                height: 25px;
+                display: block;
+                background-color: red;
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                text-align: center;
+                line-height: 25px;
+                border-radius: 50%;
+                color: white;
+                font-weight: 800;
+                cursor: pointer;
+                display: none;
+            }
+
+        .layui-btn {
+            background-color: #177ce3;
+        }
+
+        .layui-form-label {
+            padding: 10px 0;
+            width: 100px;
+        }
+
+        .layui-input-inline {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .layui-input-block button {
+            margin: 15px 0;
+        }
+
+        .system-title {
+            height: 50px;
+            line-height: 50px;
+            font-size: 14px;
+        }
+
+            .system-title span {
+                margin: 0 5px;
+            }
+
+            .system-title a:first-child {
+                color: #999;
+            }
+    </style>
+</head>
+<body>
+    <div class="system-title">
+        <a href="@Url.Action("index","home")" title="第三方平台">第三方平台</a>
+        <span>/</span>
+        <a href="#" title="渠道套餐修改">渠道套餐修改</a>
+    </div>
+    <form class="layui-form">
+        <input type="hidden" name="id" id="id" value="@Model.id" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐名称：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <input type="text" name="tcmc" value="@Model.tcmc" maxlength="64" placeholder="1-64个字符以内。" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">检查意义：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <input type="text" name="jcyy" maxlength="128" value="@Model.jcyy" placeholder="1-128个字符以内。" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">结算价格：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <input type="text" name="jsj" maxlength="12" value="@Model.jsj" placeholder="1-128个字符以内。" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐信息：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <div style="float:left; margin-right:46px;">
+                    <label>排序：</label>
+                    <input type="text" name="tcpx" value="@Model.tcpx" maxlength="4" class="layui-input custom-input" style="width:225px;">
+                </div>
+                <div>
+                    <label>售价：</label>
+                    <input type="text" name="jg" maxlength="8" value="@Model.jg" class="layui-input custom-input" style="width:225px;">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="xb" lay-filter="xb" value="2" title="不限" @(Model.xb.Equals(2) ? "checked" : string.Empty)>
+                <input type="checkbox" name="xb" lay-filter="xb" value="1" title="男" @(Model.xb.Equals(1) ? "checked" : string.Empty)>
+                <input type="checkbox" name="xb" lay-filter="xb" value="0" title="女" @(Model.xb.Equals(0) ? "checked" : string.Empty)>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">婚姻状态：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="hz" lay-filter="hyzt" value="2" title="不限" @(Model.hz.Equals(2) ? "checked" : string.Empty)>
+                <input type="checkbox" name="hz" lay-filter="hyzt" value="0" title="未婚" @(Model.hz.Equals(0) ? "checked" : string.Empty)>
+                <input type="checkbox" name="hz" lay-filter="hyzt" value="1" title="已婚" @(Model.hz.Equals(1) ? "checked" : string.Empty)>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" value="1" @(Model.sfqy.Equals(1) ? "checked" : string.Empty) name="sfqy" lay-skin="switch" lay-filter="switchTest" lay-text="启用|禁用">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐类别：</label>
+            <div class="layui-form-label" style="width:590px;">
+                <select xm-select="select1" xm-select-skin="primary">
+                    @{
+                        DataTable mealTable = ViewBag.MealTable as DataTable;
+                        List<string> mealType = JsonConvert.DeserializeObject<List<string>>(Model.tclxbh);
+                        if (mealType == null)
+                        {
+                            mealType = new List<string>();
+                        }
+
+                        foreach (DataRow rowItem in mealTable.Rows)
+                        {
+                            <option value="@rowItem["TCXLXID"]" @(mealType.Contains(rowItem["TCXLXID"].ToString()) ? "selected" : string.Empty)>@rowItem["TCXLXMC"]</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">高发疾病：</label>
+            <div class="layui-form-label" style="width:590px;">
+                <select xm-select="select2" xm-select-skin="primary">
+                    @{
+                        DataTable mealTable2 = ViewBag.MealTable2 as DataTable;
+                        List<string> mealType2 = JsonConvert.DeserializeObject<List<string>>(Model.tclxbh);
+                        if (mealType2 == null)
+                        {
+                            mealType2 = new List<string>();
+                        }
+                        foreach (DataRow rowItem2 in mealTable2.Rows)
+                        {
+                            <option value="@rowItem2["TCXLXID"]" @(mealType2.Contains(rowItem2["TCXLXID"].ToString()) ? "selected" : string.Empty)>@rowItem2["TCXLXMC"]</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐图片：</label>
+            <div class="layui-input-block">
+                <ul>
+                    <li>
+                        <div>
+                            <button id="BtnUpload" type="button" class="layui-btn" @(!string.IsNullOrEmpty(Model.tctp) ? "style=display:none" : string.Empty)><i class="layui-icon">&#xe67c;</i>浏览</button>
+                            <input type="hidden" name="tctp" value="@Model.tctp" />
+                            <img title="医院logo" alt="医院logo" @(!string.IsNullOrEmpty(Model.tctp) ? "style=display:block" : string.Empty) src="@Model.tctp" />
+                            <span @(!string.IsNullOrEmpty(Model.tctp) ? "style=display:block" : string.Empty)>X</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="BtnSave" id="BtnSave"><i class="layui-icon">&#xe605;</i>确定</button>
+                <button type="button" onclick="window.history.go(-1);" class="layui-btn"><i class="layui-icon">&#xe65c;</i>返回</button>
+            </div>
+        </div>
+    </form>
+    <script>
+
+        $(".layui-input-block li span").click(function () {
+            $(this).siblings("button").show().end().siblings("input[name=tctp]").val("").next().prop("src", "#").hide().end().end().hide();
+        });
+
+        layui.use(["form", "upload"], function () {
+            var form = layui.form, layer = layui.layer
+            upload = layui.upload;
+            formSelects.config('select1', { direction: "down" });
+            formSelects.config('select2', { direction: "down" });
+            var uploadInst = upload.render({
+                accept: "images",
+                elem: "#BtnUpload",
+                url: '@Url.Content("~/Organ/UploadImg")',
+                before: function () {
+                },
+                done: function (res) {
+                    layer.msg(res.msg, { icon: 1, time: 1500 }, function () {
+                        $("#BtnUpload").hide().siblings("input[name=tctp]").val(res.data.src).next().show().prop("src", res.data.src).next().show();
+                    });
+                },
+                error: function () {
+                    layer.msg("图片上传失败.", { icon: 2 });
+                }
+            });
+            form.on("checkbox(xb)", function (data) { CheckBoxClick(data, form); });
+            form.on("checkbox(hyzt)", function (data) { CheckBoxClick(data, form); });
+
+
+            //监听提交
+            form.on('submit(BtnSave)', function (data) {
+                var mealType = [];
+                $(formSelects.value("select1")).each(function () {
+                    mealType.push(this.value);
+                });
+                $(formSelects.value("select2")).each(function () {
+                    mealType.push(this.value);
+                });
+                data.field.tclxbh = JSON.stringify(mealType);
+                var url='@Url.Content("~/Qudao/Update")';
+                $.post(url, data.field, function (xhrData) {
+                    if (xhrData.Code == 200) {
+                        layer.msg("更新成功", { icon: 1, time: 1500 }, function () {
+                            window.location.href = '@Url.Content("~/Qudao/tc")';
+                        });
+                    }
+                }, "JSON");
+                return false;
+            });
+        });
+
+        function CheckBoxClick(data, form) {
+            var siblingsItems = $(data.elem).siblings("input[type=checkbox]");
+            if (data.elem.checked == false && siblingsItems.find(":checked").length == 0) {
+                data.elem.checked = true;
+            } else {
+                siblingsItems.prop("checked", false);
+            }
+            form.render('checkbox');
+        }
+    </script>
+</body>
+</html>

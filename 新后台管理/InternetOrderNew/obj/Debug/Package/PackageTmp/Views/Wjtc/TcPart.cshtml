@@ -1,0 +1,43 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<Model.Wjtc>
+<table class="layui-table layui-form" lay-skin='nob'>
+    <thead>
+    <tr>
+        <th>套餐编号</th>
+        <th>套餐名称</th>
+        <th>套餐价格</th>
+        <th>套餐标签</th>
+        <th>适用人群</th>
+        <th>作用</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.RowNum</td>
+                <td>@item.TCMC</td>
+                <td>@item.JG</td>
+                <td>@item.JG</td>
+                <td>@item.SYRQ</td>
+                <td>@item.TCZY</td>
+                <td class="tooltd">
+                    <a href="javascript:;" class="text_blue" onclick="edit(@item.ID)">编辑</a>
+                    <a href="javascript:;" class="text_blue" onclick="del(@item.ID)">删除</a>
+                </td>
+            </tr>
+        }
+    }
+</table>
+@if (Model == null || Model.Count == 0)
+{
+    <div class="data_none"><img src="~/content/assets/images/nothing.png" alt=""></div>
+}
+<!-- 分页样式 -->
+@(ViewBag.Pager)

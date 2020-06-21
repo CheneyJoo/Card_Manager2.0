@@ -1,0 +1,93 @@
+{
+  "id": "1362706",
+  "name": "order",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "147169",
+      "name": "设置",
+      "font_class": "icon02",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "521966",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "586758",
+      "name": "客户管理",
+      "font_class": "weibiaoti2",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "688125",
+      "name": "我的报表 2",
+      "font_class": "wodebaobiao2",
+      "unicode": "e7a2",
+      "unicode_decimal": 59298
+    },
+    {
+      "icon_id": "2461446",
+      "name": "报表-selected",
+      "font_class": "baobiao-selected",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "4182597",
+      "name": "AK-YK结算台_fill",
+      "font_class": "yk_jiesuantai_fill",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "4409261",
+      "name": "上传",
+      "font_class": "ziyuan",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "5321778",
+      "name": "管理流转协作",
+      "font_class": "guanliliuzhuanxiezuo",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "5835478",
+      "name": "刷新",
+      "font_class": "shuaxin",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "7674857",
+      "name": "导出",
+      "font_class": "biaoge-xiazai",
+      "unicode": "e70f",
+      "unicode_decimal": 59151
+    },
+    {
+      "icon_id": "7843309",
+      "name": "首页",
+      "font_class": "shouyex",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "9179636",
+      "name": "退出-01",
+      "font_class": "tuichu-",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    }
+  ]
+}

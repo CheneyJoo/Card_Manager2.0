@@ -1,0 +1,41 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<Model.PqQyModel>
+<table class="layui-table layui-form" lay-skin='nob'>
+    <thead>
+        <tr>           
+            <th>渠道名称</th>
+            <th>排期时间</th>
+            <th>每天预约人数</th>
+            <th>休息日</th>
+            <th>提前预约天数</th>           
+            <th>预约截止时间</th>
+            <th>操作</th>
+          
+        </tr>
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr class="">
+                <td>@item.qdmc</td>
+                <td>@item.ksrq.ToString("yyyy-MM-dd")-@item.jsrq.ToString("yyyy-MM-dd")</td>
+                <td>@item.tjrs</td> 
+                  <td>@item.xxr</td>           
+                <td>@item.tqts</td>                
+                <td>@item.jzsj</td>           
+                <td><a class="text_blue" href="/Schedule/edit/@item.pqbh">编辑</a> </td>
+
+            </tr>
+        }
+    }
+</table>
+@if (Model == null || Model.Count == 0)
+{
+    <div class="data_none"><img src="~/content/assets/images/nothing.png" alt=""></div>
+}
+<!-- 分页样式 -->
+@(ViewBag.Pager)

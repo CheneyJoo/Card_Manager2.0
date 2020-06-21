@@ -1,0 +1,105 @@
+﻿
+@{
+  
+}
+@model Model.XtJgbModel
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+            <span class="layui-breadcrumb">
+                <a>第三方平台管理</a>
+                <a class="on">医院信息设置</a>
+            </span>
+        </div>
+    </div>
+    <div class="infoChangeWrap layui-form">
+        <div class="item">
+            <dl>
+                <dt>医院编号：</dt>
+                <dd>@Model.yybh</dd>
+            </dl>
+        </div>
+        <div class="item">
+            <dl>
+                <dt>医院名称：</dt>
+                <dd>@Model.jgmc</dd>
+            </dl>
+        </div>
+        <div class="item">
+            <dl>
+                <dt>医院地址：</dt>
+                <dd>@Model.jgdz</dd>
+            </dl>
+        </div>
+        <div class="item">
+            <div class="title">医院图片：</div>
+            <ul class="imgList">             
+                @foreach (string a in Model.yyimage.Split(','))
+                {
+                    <li><img src="@a" /></li>
+                }              
+            </ul>
+        </div>
+        <div class="item">
+            <div class="title">医院LOGO：</div>
+            <ul class="imgList">
+                <li><img  src="@Model.yylogoimage" /></li>
+            </ul>
+        </div>
+        <div class="item">
+            <div class="title">联系电话：</div>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" placeholder="请输入" id="i_lxdh" value="@Model.lxdh">
+            </div>
+        </div>
+        <div class="item">
+            <div class="title">联系人：</div>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" placeholder="请输入" id="i_lxr" value="@Model.lxr">
+                </div>
+        </div>
+        <div class="item">
+            <div class="title">医院介绍：</div>
+            <div style="overflow: hidden;">
+                <textarea class="layui-textarea" id="i_yyjs">@Model.yyjs</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="c_btns_center">
+        <button class="layui-btn layui-btn-blue" onclick="save()">保存</button>
+    </div>
+</div>
+
+@section scripts {
+
+    <script>   
+        
+		function save()
+		{
+		  
+		    $.ajax({
+		        url: '/Yyjbxx/UpdateYy',
+		        type: 'post',
+		        dataType: 'json',
+		        data: { lxdh: $("#i_lxdh").val(), lxr: $("#i_lxr").val(), yyjs: $("#i_yyjs").val() },
+		        success: function (res) {
+		            if (res.flag) {
+		                layer.msg('保存成功！', {
+		                    icon: 1, time: 1000, end: function () {		                    
+		                    }
+		                });
+
+		            } else {
+		                layer.msg('保存失败！', { icon: 2, time: 1000 });
+		            }
+		        },
+		        error: function () {
+
+		            layer.msg('保存失败！', { icon: 2, time: 1000 });
+		            return;
+
+		        }
+		    });
+		}
+    </script>
+}

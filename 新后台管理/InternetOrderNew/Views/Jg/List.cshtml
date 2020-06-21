@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "互联网订单管理系统_机构管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<Model.XtJgbModel>
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+        </script>
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="/home/index">首页</a>
+            </li>
+            <li>
+                <a href="/jg/list">机构</a>
+            </li>
+        </ul>
+        <!-- /.breadcrumb -->
+    </div>
+
+    <div class="page-content">
+        @{Html.RenderPartial("PageSetting");}
+        <div class="page-content-area">
+            <div class="widget-main">
+                <form id="SearchForm" class="form-inline" action="/jg/list" method="post">
+
+                
+                  
+                    <label class="inline">
+                        <span class="lbl">机构名称</span>
+                        <input type="text" placeholder="机构" id="jgmc" value="@ViewData["jgmc"]" maxlength="30">
+                    </label>
+                  
+                    <label class="inline">
+                        <span class="lbl">是否启用</span>
+                        <select id="sfqy" name="sfqy" style="width: 100px;" onselect="1">
+                            <option value="">全部</option>
+                            <option value="1">启用</option>
+                            <option value="2">未启用</option>                          
+                        </select>
+                    </label>
+
+                    <button class="btn btn-primary btn-sm" type="button" onclick="search()">
+                        查询
+                        <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+                    </button>
+
+
+                    <input id="page" name="page" value="1" type="hidden" />
+                    <input id="Parm_Key_Value" name="Parm_Key_Value" value="" type="hidden" />
+                </form>
+            </div>
+
+
+            <table class="table table-striped table-bordered table-hover" id="sample-table-1">
+                <thead>
+                    <tr>
+                        <th>机构名称</th>
+                        <th>联系人</th>
+                        <th>联系电话</th>
+                        <th>是否启用</th>
+                        <th>创建时间</th>
+                        <th>地址</th>  
+                        <th>自动标识</th>    
+                        <th>编辑</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr class="">
+                                <td>@item.jgmc</td>
+                                <td>@item.lxr</td>
+                                <td>@item.lxdh</td>
+                                <td>@(item.sfqy==1?"是":"否")</td>
+                                <td>@item.createtime.ToString("yyyy-MM-dd hh:mm:ss")</td>
+                                <td>@item.jgdz</td>
+                                
+                                 @if(item.zdbz == 1)
+                                 {
+                                     <td>全自动接口落单</td>
+                                 }
+                                 else if (item.zdbz == 2)
+                                 {
+                                <td>半自动接口落单</td>}
+                                 else
+                                 {
+                                <td>手动落单</td>
+                                 }
+                            
+                                <td> <a class="editlink" href="javascript:;" guid="@item.yybh">编辑</a></td>
+                                   
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+
+            @(ViewBag.Pager)
+
+            <div id="jkxq" class="modal" tabindex="-1">
+                <div class="modal-dialog" style="margin-top:5%; width:650px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 id="title" class="blue bigger">机构详情</h4>
+                        </div>
+                        <div class="modal-body">
+                            <iframe id="jkqxIframe" width="100%" height="450px" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <!-- /.page-content-area -->
+    </div>
+    <!-- /.page-content -->
+</div>
+<!-- /.main-content -->
+@section scripts {
+    <script>
+        jQuery(function ($) {
+            $("#sfqy").val("@ViewData["sfqy"]");
+
+            //编辑
+            $(".editlink").click(function () {
+                var frameSrc = "/jg/index?yybh=" + $(this).attr("guid");
+                $("#jkqxIframe").attr("src", frameSrc);
+                $('#jkxq').modal({ show: true, backdrop: 'static' });
+            });
+
+        });
+        function changeParam() {
+            var param = "";
+            var sfqy = $("#sfqy").val();
+            var jgmc = $("#jgmc").val();
+          
+
+            if (sfqy != "") {
+                param += "sfqy☻" + sfqy + "≌";
+            }
+
+            if (jgmc != "") {
+                param += "jgmc☻" + jgmc + "≌";
+            }
+
+            var Parm_Key_Value = param;
+
+            $("#Parm_Key_Value").val(Parm_Key_Value);
+        }
+
+        function changePostList(page) {//翻页
+            $("#page").val(page);
+            search();
+        }
+        function search() {
+            changeParam();
+            $("#SearchForm").submit();
+        }
+
+    </script>
+}

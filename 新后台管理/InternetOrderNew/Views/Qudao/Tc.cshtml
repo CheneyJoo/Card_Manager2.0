@@ -1,0 +1,393 @@
+﻿@{
+
+}
+@model List<Model.XttcbModel>
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+            <span class="layui-breadcrumb">
+                <a >第三方平台管理</a>
+                <a  class="on">渠道套餐管理</a>
+            </span>
+        </div>
+    </div>
+    <div class="tool_pannel layui-form">
+
+        <div class="layui-form-item ">
+            <div class="layui-form-inline">
+                <label class="layui-form-label">渠道名称：</label>
+                <div class="layui-input-inline">
+                    <select name="" id="qymc"  onselect="1" lay-filter="cboQdbh">
+                        <option value="">全部渠道</option>
+                        @foreach (var item in ViewBag.QdList)
+                        {
+                            <option value="@item.key">@item.values</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label">套餐名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="tcmc" placeholder="请输入">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label">启动状态：</label>
+                <div class="layui-input-inline" style="width:80px">
+                    <select name="" id="sfqy">
+                        <option value="">全部</option>
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                </div>
+            </div>
+           
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</button>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-primary" onclick="cz(this)">重置</button>
+            </div>
+        </div>
+        @if (ViewBag.Zdbz.Equals(3))
+        {
+            <button class="layui-btn layui-btn-blue" onclick="importTc()"  id="btnImport"><i class="iconfont icon-ziyuan"></i>导入套餐</button>
+        }
+        else
+        {
+            <button class="layui-btn layui-btn-blue" onclick="tb()"><i class="iconfont icon-shuaxin"></i>同步套餐</button>
+        }
+    </div>
+    <div class="table_wrap">
+        @Html.Partial("TcPart", Model)
+        <!-- 分页样式 -->
+
+
+    </div>
+</div>
+
+<!-- 编辑弹窗 -->
+<div class="edit_dialog">
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">渠道名称：</label>
+            <div class="layui-input-inline">
+                <input type="hidden" id="i_id" />
+                <input type="text" class="layui-input" placeholder="请输入" style="background-color:#eee" disabled id="i_qumc">
+            </div>
+        </div>      
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐名称：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" placeholder="请输入" style="background-color:#eee;" disabled id="i_tcmc">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐编号：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" placeholder="请输入" style="background-color:#eee" disabled id="i_tcbh">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">价格：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input"  id="i_jg" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">结算价：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input"  id="i_jsj" onkeyup="onlyNumber(this)" onblur="onlyNumber(this)">
+            </div>
+        </div>
+        <div class="buttonwrap">
+            <a href="javascript:qrxg();" class="layui-btn layui-btn-blue yes" style="width: auto;" id="qrxg">确认修改</a>
+        </div>
+    </div>
+</div>
+
+<!-- 套餐信息查看 -->
+<div class="moreInfoTab">
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>组合项目编号</th>
+                <th>组合项目名称</th>
+                <th>科室编号</th>
+                <th>科室名称</th>
+                <th>单价</th>
+                <th>性别</th>
+                @*<th>是否妇科</th>*@
+            </tr>
+        </thead>
+        <tbody id="tcdetail">
+           
+
+        </tbody>
+      
+    </table>
+</div>	
+
+<!-- 导入弹窗 -->
+<div id="winImport" class="import_dialog">
+    <div class="impControls">
+        <input type="text" id="idJsid" hidden="">
+        <div class="layui-input-inline">
+            <input type="text" id="filepath" readonly="readonly" class="layui-input">
+        </div>
+        <button class="layui-btn layui-btn-blue yes" type="button" id="schFile">浏览文件</button>
+        <a href="~/Content/Template/导入套餐模板.xls" id="downLink" class="layui-btn layui-btn-blue yes">下载模板</a>
+    </div>
+    <div class="importtips">
+        <span>1、请先点击“下载模板”并保存到本地使用.</span><br />
+        <span>2、按照模板格式填写需要导入的信息然后保存.</span><br />
+        <span>3、点击“选择文件夹”打开存放的文件夹位置进行上传.</span><br />
+        <span>4、上传成功后自动刷新列表.</span><br />
+    </div>
+    <div class="buttonwrap">
+        <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="uploadbtn" style="width: 92px">确定上传</a>
+        <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel" style="width: 92px">取消</a>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        var uploadInst;
+        $(function() {
+            layui.use('upload',
+                function () {
+                    var upload = layui.upload;
+                    //执行实例
+                    uploadInst = upload.render({
+                        elem: '#schFile', //绑定元素
+                        url: '@Url.Content("~/QuDao/ImportTc")', //上传接口
+                        auto: false,
+                        accept: 'file',
+                        exts: 'xls|excel|xlsx',
+                        acceptMime: 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        bindAction: '#uploadbtn',
+                        choose: function (obj) {
+                            obj.preview(function (index, file, result) {
+                                $('#filepath').val(file.name);
+                                $('#uploadbtn').show();
+                            });
+                        },
+                        before: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                            if ($('#filepath').val() == "") {
+                                layer.msg('请选择文件', { icon: 2, time: 1000 });
+                                this.preventDefault();
+                            }
+                            layer.load(); //上传loading
+                            this.url ='@Url.Content("~/QuDao/ImportTc")';
+                        },
+                        done: function (res) {
+                            if (res.Code == 200) {
+                                layer.closeAll();
+                                changePostList(1);
+                                layer.msg(res.Msg, { icon: 1, time: 2000 });
+                                $('#winImport').hide();
+                            } else {
+                                layer.closeAll('loading'); //关闭loading
+                                layer.msg(res.Msg, { icon: 2, time: 2500 });
+                            }
+
+                        },
+                        error: function (res) {
+                            layer.closeAll('loading'); //关闭loading
+                            layer.msg(res.Msg, { icon: 2, time: 2500 });
+                        }
+                    });
+                });
+
+            $('#btnCancel').on("click", function () {
+                layer.closeAll();
+                $('#winImport').hide();
+            });
+        });
+
+        //渠道名称change事件
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('select(cboQdbh)', function (data) {
+                if (data.value != "") {
+                    //$('#btnImport').show();
+                } else {
+                   // $('#btnImport').hide();
+                }
+            });
+
+        });
+
+        //同步
+        function tb() {
+            var qdbh = $("#qymc").val();
+            if (qdbh == "")
+            {
+                layer.msg('请选择渠道', { icon: 2 ,time:1000});
+                return;
+            }
+            var id = layer.load(0, { time: false, shade: 0.3 });
+            $.ajax({
+                url:'@Url.Content("~/QuDao/QdTcTb")',
+                type: 'post',
+                dataType: 'json',
+                data: { qdbh: qdbh },
+                success: function (res) {
+                    if (res.flag) {
+                        layer.close(id);
+                        layer.msg('同步完成！', { icon: 1, time: 1000 });
+                        changePostList(1);
+
+                    } else {
+                        layer.close(id);
+                        layer.msg('同步失败', { icon: 2, time: 1000 });
+                    }
+                },
+                error: function () {
+                    layer.close(id);
+                    layer.msg('同步失败', { icon: 2, time: 1000 });
+                    return;
+
+                }
+            });
+        }
+
+
+
+        //分页
+        function changePostList(page)
+        {
+
+            var tcmc = $("#tcmc").val();
+            var sfqy = $("#sfqy").val();
+            var qdbh = $("#qymc").val();
+            var url = '@Url.Content("~/QuDao/Tc")'+'?page=' + page + "&sfqy=" + sfqy + "&qdbh=" + qdbh + "&tcmc=" + tcmc;
+
+            var id = layer.load(0, {time:false,shade:0.3});
+            $.get(url, function (data) {
+
+                $(".table_wrap").html(data);
+                layer.close(id);
+            });
+        }
+        //编辑操作
+        function edit(id, qdmc, tcbh, tcmc, jg, jsj) {
+            $("#i_id").val(id);
+            $("#i_qumc").val(qdmc);
+            $("#i_tcbh").val(tcbh);
+            $("#i_tcmc").val(tcmc);
+            $("#i_jg").val(jg);
+            $("#i_jsj").val(jsj);
+            var i = layer.open({
+                type: 1,
+                title: ['套餐编辑', 'font-weight:bold;font-size:16px'],
+                area: ['540px', 'auto'],
+                content: $('.edit_dialog'),
+                cancel: function () {
+                    $('.edit_dialog').hide()
+                }
+            })
+        }
+
+        function onlyNumber(obj) {
+            //得到第一个字符是否为负号
+            var t = obj.value.charAt(0);
+            //先把非数字的都替换掉，除了数字和.
+            obj.value = obj.value.replace(/[^\d\.]/g, '');
+            //必须保证第一个为数字而不是.
+            obj.value = obj.value.replace(/^\./g, '');
+            //保证只有出现一个.而没有多个.
+            obj.value = obj.value.replace(/\.{2,}/g, '.');
+            //保证.只出现一次，而不能出现两次以上
+            obj.value = obj.value.replace('.', '$#$').replace(/\./g, '').replace(
+                '$#$', '.');
+            //如果第一位是负号，则允许添加
+            if (t == '-') {
+                obj.value = '-' + obj.value;
+            }
+        }
+
+        //确认修改
+        function qrxg()
+        {
+            var page=$(".on").html();
+
+            $.ajax({
+                url:'@Url.Content("~/QuDao/UpdateQudaoTc")',
+                type: 'post',
+                dataType: 'json',
+                data: { id: $("#i_id").val(), jg: $("#i_jg").val(), jsj: $("#i_jsj").val(), sfxsjg:1 },
+                success: function (res) {
+                    if (res.flag) {
+
+                        layer.closeAll();
+                        $('.edit_dialog').hide();
+
+                        layer.msg('修改成功！', {
+                            icon: 1, time: 1000, end: function () {
+                                changePostList(page);
+                            }
+                        });
+
+                    } else {
+                        layer.msg('修改失败', { icon: 2, time: 1000 });
+                    }
+                },
+                error: function () {
+
+                    layer.msg('修改失败！', { icon: 2, time: 1000 });
+                    return;
+
+                }
+            });
+
+        }
+        //查看操作
+        function getMoreInfo(yybh, tcbh, tcmc) {
+
+
+            var url = '@Url.Content("~/QuDao/QdTcZhxmIndex")'+'?yybh=' + yybh + "&tcbh=" + tcbh;
+            var id = layer.load(0, { time: false, shade: 0.3 });
+            $.get(url, function (data) {
+
+                $("#tcdetail").html(data);
+                layer.close(id);
+
+                layer.open({
+                    type: 1,
+                    title: [tcmc, 'font-weight:bold;font-size:16px'],
+                    area: ['auto', '400px'],
+                    content: $('.moreInfoTab'),
+                    cancel: function () {
+                        $('.moreInfoTab').hide()
+                    }
+                })
+
+            });
+
+
+        }
+
+        //导入套餐
+        function importTc() {
+            //var qdbh = $("#qymc").val();
+            //if (qdbh == "") {
+            //    layer.msg('请选择渠道', { icon: 2, time: 1500 });
+            //    return;
+            //}
+            layer.open({
+                type: 1,
+                title: ["导入套餐", 'font-weight:bold;font-size:16px'],
+                area: ['650px', '500px'],
+                content: $('#winImport'),
+                cancel: function () {
+                    $('#winImport').hide();
+                }
+            });
+            $('#filepath').val('');
+            //$('#uploadbtn').attr('class', 'layui-btn layui-btn-disabled');
+            $('#uploadbtn').hide();
+        }
+    </script>
+}

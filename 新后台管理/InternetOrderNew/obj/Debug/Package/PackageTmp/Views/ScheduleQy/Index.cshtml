@@ -1,0 +1,232 @@
+﻿
+@{
+    Layout = null;
+    string xxr = Model.xxr.Replace("0", "星期日").Replace("1", "星期一").Replace("2", "星期二").Replace("3", "星期三").Replace("4", "星期四").Replace("5", "星期五").Replace("6", "星期六").Replace("|", " ");
+}
+@model Model.PqJbszModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="~/Content/assets/css/layui.css">
+    <link rel="stylesheet" href="~/Content/assets/font2/iconfont.css">
+    <link rel="stylesheet" href="~/Content/assets/css/view.css" />
+    <link rel="stylesheet" href="~/Content/assets/css/admin.css" />
+    <link rel="icon" href="/favicon.ico">
+    <title>基本信息管理-排期基本设置</title>
+</head>
+<body class="layui-view-body">
+    <form id="form1" class="layui-form">
+        <div class="layui-content">
+            <div class="layui-page-header">
+                <div class="pagewrap">
+                    <span class="layui-breadcrumb">
+                        <a>基本信息管理</a>
+                        <a class="on">排期基本设置</a>
+                    </span>
+                </div>
+            </div>
+            <!-- 三块区 -->
+            <div class="box-3-wrap layui-col-space30 layui-row">
+                <div class="layui-col-md4 layui-col-sm4">
+                    <div class="box">
+                        <img src="~/Content/assets/images/01.png" alt="">
+                        <p>每天最大接待量</p>
+                        <h3>@Model.zdjd</h3>
+                    </div>
+                </div>
+                <div class="layui-col-md4 layui-col-sm4">
+                    <div class="box">
+                        <img src="~/Content/assets/images/02.png" alt="">
+                        <p>团检预留量</p>
+                        <h3>@Model.tjyl</h3>
+                    </div>
+                </div>
+                <div class="layui-col-md4 layui-col-sm4">
+                    <div class="box">
+                        <img src="~/Content/assets/images/03.png" alt="">
+                        <p>休息时间</p>
+                        <h3>@(xxr)</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form layui-col-space30 pqsz_wrap">
+                <div class="layui-col-md6 layui-col-sm6">
+                    <div class="pqsz_box" style="height: 400px;">
+                        <div class="title">排期基本设置</div>
+                        <div class="item">
+                            <div class="i_title">预留名额设置</div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: 112px;padding: 6px 15px;">每天最大接待量：</label>
+                                <div class="layui-input-inline">
+                                    <input type="number" lay-verify="required" id="zdjd" name="zdjd"  min="0"  value="@Model.zdjd" class="layui-input" placeholder="请输入">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: 112px;padding: 6px 15px;">团检预留量：</label>
+                                <div class="layui-input-inline">
+                                    <input type="number" lay-verify="required" id="tjyl" name="tjyl" min="0" value="@Model.tjyl" class="layui-input" placeholder="请输入">
+                                </div>
+                            </div>
+                            <input id="qdyl" name="qdyl" type="hidden" value="@Model.qdyl" />
+                        </div>
+                        <div class="item">
+                            <div class="i_title" style="margin-bottom: 14px;">休息日设置</div>
+                            <div class="checkes_wrap">
+                                <input type="checkbox" name="xxr" title="周一" lay-skin="primary" @(Model.xxr.Contains('1') ? "checked" : "") value="1">
+                                <input type="checkbox" name="xxr" title="周二" lay-skin="primary" @(Model.xxr.Contains('2') ? "checked" : "") value="2">
+                                <input type="checkbox" name="xxr" title="周三" lay-skin="primary" @(Model.xxr.Contains('3') ? "checked" : "") value="3">
+                                <input type="checkbox" name="xxr" title="周四" lay-skin="primary" @(Model.xxr.Contains('4') ? "checked" : "") value="4">
+                                <input type="checkbox" name="xxr" title="周五" lay-skin="primary" @(Model.xxr.Contains('5') ? "checked" : "") value="5">
+                                <input type="checkbox" name="xxr" title="周六" lay-skin="primary" @(Model.xxr.Contains('6') ? "checked" : "") value="6">
+                                <input type="checkbox" name="xxr" title="周日" lay-skin="primary" @(Model.xxr.Contains('0') ? "checked" : "") value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6 layui-col-sm6">
+                    <div class="pqsz_box" style="height: 400px;">
+                        <div class="title">特殊日期设置</div>
+                        <div class="chooseDate_wrap layui-row layui-col-space30">
+                            <div class="layui-col-md6">
+                                <div>
+                                    <div class="i_title">暂停预约设置(不能预约的日期)</div>
+                                    <input class="layui-input" id="time1" type="text" placeholder="请选择日期">
+                                    <div class="pushDataWrap ztyy">
+                                        @if (!string.IsNullOrEmpty(Model.ztyy))
+                                        {
+                                            foreach (var item in Model.ztyy.Split(','))
+                                            {
+                                                <span>@(item)<i class="layui-icon delZtyy" rq="@(item)">&#x1007;</i></span>
+                                            }
+                                        }
+                                    </div>
+                                    <input type="hidden" id="ztyy" name="ztyy" value="@Model.ztyy" />
+                                </div>
+                            </div>
+                            <div class="layui-col-md6">
+                                <div>
+                                    <div class="i_title">特殊可约日期(可以预约的特殊日期)</div>
+                                    <input class="layui-input" id="time2" type="text" placeholder="请选择日期">
+                                    <div class="pushDataWrap tsky">
+                                        @if (!string.IsNullOrEmpty(Model.tsky))
+                                        {
+                                            foreach (var item in Model.tsky.Split(','))
+                                            {
+                                                <span>@(item)<i class="layui-icon delTsky" rq="@(item)">&#x1007;</i></span>
+                                            }
+                                        }
+                                    </div>
+                                    <input type="hidden" id="tsky" name="tsky" value="@Model.tsky" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c_btns_center">
+                <button class="layui-btn layui-btn-blue" lay-submit="" lay-filter="save">保存</button>
+            </div>
+        </div>
+    </form>
+    <script src="~/Content/assets/jquery.js"></script>
+    <script src="~/Content/assets/layui.all.js"></script>
+    <script>
+        var form = layui.form;
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#time1',
+                done: function (value, date, endDate) {
+                    var list = [];
+                    if ($("#ztyy").val() != '') {
+                        list = $("#ztyy").val().split(',');
+                    }
+                    if (list.indexOf(value) < 0) {
+                        list.push(value);
+                    }
+                    list.sort();
+                    var html = "";
+                    $.each(list, function (i, item) {
+                        html += '<span>' + item + '<i class="layui-icon delZtyy" rq="' + item + '">&#x1007;</i></span>';
+                    })
+                    $(".ztyy").html(html);
+                    $("#ztyy").val(list.join(','));
+                }
+            });
+            laydate.render({
+                elem: '#time2',
+                done: function (value, date, endDate) {
+                    var list = [];
+                    if ($("#tsky").val() != '') {
+                        list = $("#tsky").val().split(',');
+                    }
+                    if (list.indexOf(value) < 0) {
+                        list.push(value);
+                    }
+                    list.sort();
+                    var html = "";
+                    $.each(list, function (i, item) {
+                        html += '<span>' + item + '<i class="layui-icon delTsky" rq="' + item + '">&#x1007;</i></span>';
+                    })
+                    $(".tsky").html(html);
+                    $("#tsky").val(list.join(','));
+                }
+            });
+        });
+
+        $(document).on("click", ".delZtyy", function () {
+            var date = $(this).attr("rq");
+            var list = [];
+            if ($("#ztyy").val() != '') {
+                list = $("#ztyy").val().split(',');
+            }
+            $(this).parent().remove();
+            list.splice($.inArray(date, list), 1)
+            $("#ztyy").val(list.join(','));
+        })
+
+        $(document).on("click", ".delTsky", function () {
+            var date = $(this).attr("rq");
+            var list = [];
+            if ($("#tsky").val() != '') {
+                list = $("#tsky").val().split(',');
+            }
+            $(this).parent().remove();
+            list.splice($.inArray(date, list), 1)
+            $("#tsky").val(list.join(','));
+        })
+
+        form.on('submit(save)', function (data) {
+            $.ajax({
+                url: "@Url.Action("Index")",
+                data: $("#form1").serialize(),
+                dataType: "json",
+                type: "post",
+                success: function (res) {
+                    layer.msg('保存成功！', {
+                        icon: 1, time: 1000, end: function () {
+                            window.location.reload();
+                        }
+                    });
+
+                }
+            })
+            return false;
+        });
+
+
+        $(document).on("input", "input[type='number']", function () {
+            if ($(this).val().length > 4) {
+                $(this).val($(this).val().slice(0, 4));
+            }
+        })
+        $(document).on("keyup", "input[type='number']", function () {
+            var value = $(this).val().replace(/\D/g, '');
+            $(this).val(value);
+        })
+    </script>
+</body>
+</html>

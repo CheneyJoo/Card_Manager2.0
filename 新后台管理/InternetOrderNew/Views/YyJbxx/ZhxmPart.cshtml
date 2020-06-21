@@ -1,0 +1,75 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<Model.XtZhxmbModel>
+<table class="layui-table layui-form" lay-skin='nob'>
+    <thead>
+        <tr>
+            <th style="min-width: 86px;">组合项目编号</th>
+            <th style="min-width: 86px;">组合项目名称</th>
+            @if (ViewBag.Zdbz.Equals(3))
+            {
+                <th style="min-width: 86px;">项目详情</th>
+            }
+            @*<th style="min-width: 60px;">科室编号</th>*@
+            <th style="min-width: 60px;">科室名称</th>
+            <th style="min-width: 86px;">单价</th>
+            <th style="min-width: 30px;">性别</th>
+            <th style="min-width: 60px;">是否妇科</th>
+            <th style="min-width: 60px;">是否启用</th>
+            @*<th style="min-width: 86px;">初次同步时间</th>*@
+            <th style="min-width: 86px;">更新时间</th>
+            <th >上限人数</th>
+        </tr>
+    </thead>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.zhxmbh</td>
+                <td>@item.zhxmmc</td>
+                @if (ViewBag.Zdbz.Equals(3))
+                {
+                    <td>@item.zhxmms</td>
+                }
+                @*<td>@item.zhxmksbh</td>*@
+                <td>@item.zhxmksmc</td>
+                <td>￥@item.zhxmjg</td>
+                @if (item.xb == 0)
+                {
+                    <td>女</td>
+                }
+                else if (item.xb == 1)
+                {
+                    <td>男</td>
+                }
+                else
+                {
+                    <td>通用</td>
+                }
+                
+                <td>@(item.sffk == 0 ? "否" : "是")</td>
+                <td>@(item.sfqy == 1 ? "是" : "否")</td>
+                @*<td>@item.createtime.ToString("yyyy-MM-dd HH:mm:ss")</td>*@
+                <td>@item.updatetime.ToString("yyyy-MM-dd")</td>
+                <td class="show_bartd">
+                    <input type="text" value="@item.sxrs"  onkeyup="this.value = this.value.replace(/\D|[0-9]{4,}/g, '')"  readonly="true">
+                    <span class="edit" onclick="edit(this)"></span>
+                    <span class="aspan">
+                        <a class="text_blue" onclick="save(this,'@item.zhxmbh')">保存</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <a class="text_blue" onclick="quxiao(this)" href="javascript:;">取消</a>
+                    </span>
+                </td>
+            </tr>
+        }
+    }
+    </table>
+@if (Model == null || Model.Count == 0)
+{
+    <div class="data_none"><img src="~/content/assets/images/nothing.png" alt=""></div>
+}
+ <!-- 分页样式 -->
+@(ViewBag.Pager)

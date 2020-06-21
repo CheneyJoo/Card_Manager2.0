@@ -1,0 +1,82 @@
+﻿.datetable thead tr .arrowFlip { left: 50% !important; margin-left: -179px !important; }
+
+.datetable tbody td { height: 50px !important; color: #333; font-size: 14px; }
+
+/* 日历的 五种状态 */
+
+/* 包含在时间段 内的 状态 有效时间 */
+.tdhv { background-color: #efefef; cursor: pointer; }
+
+
+.td_checkhv { background-color: #efefef; }
+    .tdhv font, .td_checkhv font { color: #333; }
+
+    .tdhv span, .td_checkhv span { color: #fbac23; }
+
+/*鼠标悬停状态*/
+/*.tdhv:hover {
+            background-color: #c8c8c8;
+        }*/
+
+/* 休息状态 */
+.td_xiuxi { background-color: #efefef; }
+
+    .td_xiuxi font { color: #333; }
+
+    .td_xiuxi span { color: red; }
+
+/* 未排状态 */
+.td_weipai { }
+
+/*被编辑过的状态*/
+.edittdck { background-color: #fbac23; }
+
+    .edittdck span, .edittdck font { color: #fff; }
+
+
+/*日历六种状态 结束*/
+
+
+.input_on { height: 35px; width: 100px; border: 1px solid #f28123; color: #f28123; text-align: center; }
+
+
+.datetable thead tr td { padding: 0px !important; }
+
+.datetable_xuanze { width: 98px; height: 90px; padding: 11px 1px 1px 1px; position: absolute; display: none; margin-left: -10px; background: url(/images/checked_date.png) no-repeat -11px -2px; border-radius: 5px; box-shadow: -8px 15px 19px #aaa; -moz-box-shadow: -8px 15px 19px #aaa; -webkit-box-shadow: -8px 15px 19px #aaa; }
+
+    .datetable_xuanze div { height: 25.5px; width: 100%; line-height: 26px; font-size: 12px; color: #333; }
+
+    .datetable_xuanze .top_div { cursor: pointer; }
+
+        .datetable_xuanze .top_div:hover { background-color: #e9e9e9; }
+
+    .datetable_xuanze .bot_div { }
+
+        .datetable_xuanze .bot_div:hover { background-color: #e9e9e9; }
+
+    .datetable_xuanze .checkdiv { background-color: #e9e9e9; }
+
+h2 { height: 50px; line-height: 50px; padding-left: 20px; color: #fff; font-size: 16px; background-color: #49b140; }
+
+    h2 > a { width: 26px; height: 26px; margin-right: 10px; margin-top: 12px; float: right; background-image: url('/Content/JGTJ/img/loginBackground/close_icon_1.png'); }
+
+
+.del_color { color: #22b6ff; cursor: pointer; }
+
+.datetable_xuanze div:hover { background-color: #e9e9e9; }
+
+
+
+#txtStartDate { width: 120px; height: 30px; text-indent: 10px; }
+#txtEndDate { width: 120px; height: 30px; text-indent: 10px; }
+.Wdate[readonly] { background: #fff url(/Content/js/My97DatePicker/skin/datePicker.gif) no-repeat right !important; }
+.bCon_rigHead_tb { width: 100%; /* width: 1020px; */ color: #666; }
+    .bCon_rigHead_tb thead { padding-left: 10px; }
+.table1 { border-collapse: collapse; border: #dedede solid 1px; margin-top: 20px; }
+    .table1 tr th, .table1 tr td { border: #dedede solid 1px; padding: 10px; text-align: center; }
+
+#tqts { width: 40px; height: 30px; border: 1px solid #d0d0d0; text-align: center; margin-left: 5px; margin-right: 5px; padding: 0 10px; font-size: 12px; line-height: 22px; }
+#txtTimeBefor { width: 100px; text-indent: 10px; height: 30px; }
+#tbodydate tr td:first-child input { width: 120px; height: 35px; }
+
+#pqsj table tr td:first-child input { width: 120px; height: 35px; }

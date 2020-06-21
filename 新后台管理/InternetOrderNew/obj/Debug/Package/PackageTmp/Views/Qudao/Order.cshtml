@@ -1,0 +1,275 @@
+﻿
+@{
+
+}
+@model List<Model.DdjbxxModel>
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+            <span class="layui-breadcrumb">
+                <a>第三方平台管理</a>
+                <a class="on">渠道订单管理</a>
+            </span>
+        </div>
+    </div>
+    <div class="tool_pannel layui-form">
+
+        <div class="layui-form-item ">
+            <div class="layui-form-inline">
+                <label class="layui-form-label">渠道名称：</label>
+                <div class="layui-input-inline" style="width:150px">
+                    <select name="" id="qdbh" onselect="1">
+                        <option value="">全部渠道</option>
+                        @foreach (var item in ViewBag.QdList)
+                        {
+                            <option value="@item.key">@item.values</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label">订单日期：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="ddstart" placeholder="请选择">
+                </div>
+                <label class="layui-form-label" style="margin-right: 10px;">至</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="ddend" placeholder="请选择">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label">预约日期：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="yystart" placeholder="请选择">
+                </div>
+                <label class="layui-form-label" style="margin-right: 10px;">至</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="yyend" placeholder="请选择">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">姓名：</label>
+                <div class="layui-input-inline" style="width:150px">
+                    <input type="text" class="layui-input" id="xm" placeholder="">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">手机号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="" id="dh">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">套餐名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="" id="tcmc">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">订单状态：</label>
+                <div class="layui-input-inline">
+                    <select id="tczt" name="tczt" onselect="1" lay-filter="schTczt">
+                        <option value="">全部</option>
+                        <option value="1">待付款</option>
+                        <option value="2">预约中</option>
+                        <option value="3">预约成功</option>
+                        <option value="4">退款处理中</option>
+                        <option value="5">退款完成</option>
+                        <option value="6">已到检</option>
+                        <option value="7">已完成</option>
+                        <option value="9">已出报告</option>
+                        <option value="8">已关闭</option>
+                    </select>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</button>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-blue" onclick="exportOrder()"><i class="iconfont icon-biaoge-xiazai"></i>导出订单</button>
+            </div>
+            @if (ViewBag.Zdbz.Equals(3))
+            {
+
+                @*<div class="layui-form-inline" id="btnBatchComplete" style="display: none">
+                    <button class="layui-btn layui-btn-blue" onclick="batchComplete()" >批量确认</button>
+                </div>*@
+            }
+            <input type="hidden" id="i_zdbz" value="@ViewBag.Zdbz" />
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-primary" onclick="cz(this)">重置</button>
+            </div>
+        </div>
+    </div>
+    <div class="table_wrap">
+        @Html.Partial("OrderPart", Model)
+        <!-- 分页样式 -->
+    </div>
+</div>
+
+
+
+
+@section scripts {
+    <script>
+        //分页
+        function changePostList(page) {
+            var qdbh = $("#qdbh").val();
+            var ddstart = $("#ddstart").val();
+            var ddend = $("#ddend").val();
+            var yystart = $("#yystart").val();
+            var yyend = $("#yyend").val();
+            var dh = $("#dh").val();
+            var xm = $("#xm").val();
+            var tczt = $("#tczt").val();
+            var tcmc = $("#tcmc").val();
+            var url ='@Url.Content("~/Qudao/Order")'+ "?page=" + page + "&qdbh=" + qdbh + "&ddstart=" + ddstart + "&ddend=" + ddend + "&yystart=" + yystart + "&yyend=" + yyend + "&xm=" + xm + "&dh=" + dh + "&tczt=" + tczt + "&tcmc=" + tcmc;
+            var id = layer.load(0, { time: false, shade: 0.3 });
+            $.get(url, function (data) {
+
+                $(".table_wrap").html(data);
+                layer.close(id);
+                if (tczt == "2" || tczt == "3") {
+                    renderForm();
+                }
+            });
+        }
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#ddstart' //指定元素
+            });
+            laydate.render({
+                elem: '#ddend' //指定元素
+            });
+            laydate.render({
+                elem: '#yystart' //指定元素
+            });
+            laydate.render({
+                elem: '#yyend' //指定元素
+            });
+        });
+
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('checkbox(chkAll)', function (data) {
+                $('#idListBody').find(':checkbox').each(function () {
+                    this.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+
+            form.on('checkbox(chkSingle)', function (data) {
+                var list = $('#idListBody').find(':checkbox');
+                var checkCount = 0;
+                list.each(function () {
+                    if (this.checked) {
+                        checkCount += 1;
+                    }
+                });
+                if (checkCount == list.length) {
+                    $('#idChkAll')[0].checked = true;
+                } else {
+                    $('#idChkAll')[0].checked = false;
+                }
+                form.render('checkbox');
+            });
+
+            //订单状态change事件
+            form.on('select(schTczt)', function (data) {
+                changePostList(1);
+                if (data.value == "2" || data.value == "3") {
+                    $('#btnBatchComplete').show();
+                } else {
+                    $('#btnBatchComplete').hide();
+                }
+            });
+        });
+
+        function exportOrder() {
+
+            var qdbh = $("#qdbh").val();
+            var ddstart = $("#ddstart").val();
+            var ddend = $("#ddend").val();
+            var yystart = $("#yystart").val();
+            var yyend = $("#yyend").val();
+            var dh = $("#dh").val();
+            var xm = $("#xm").val();
+            var tczt = $("#tczt").val();
+
+            var url = '@Url.Content("~/Qudao/ExportExcel")'+ "?qdbh=" + qdbh + "&ddstart=" + ddstart + "&ddend=" + ddend + "&yystart=" + yystart + "&yyend=" + yyend + "&xm=" + xm + "&dh=" + dh + "&tczt=" + tczt;
+
+            //var list = $('#idListBody').find(':checkbox');
+            //var listDdbh = [];
+            //list.each(function () {
+            //    if (this.checked) {
+            //        listDdbh.push(this.getAttribute("ddbh"));
+            //    }
+            //});
+            //if (listDdbh.length == 0) {
+            //    showmsg("请选择订单", 2, 1);
+            //    return;
+            //}
+            //var url = "/Qudao/ExportExcel?ddbh=" + listDdbh.join(",");
+            location.href = url;
+        }
+
+        function batchComplete() {
+            var list = $('#idListBody').find(':checkbox');
+            var listDdbh = [];
+            list.each(function () {
+                if (this.checked) {
+                    listDdbh.push(this.getAttribute("ddbh"));
+                }
+            });
+            if (listDdbh.length == 0) {
+                showmsg("请选择订单", 2, 1);
+                return;
+            }
+            var ddzt = 3;
+            if ($("#tczt").val() == "3") {
+                ddzt = 7;
+            }
+            layer.load();
+            $.ajax({
+                url: '@Url.Content("~/QuDao/BatchComplete")',
+                type: 'post',
+                dataType: 'json',
+                data: { ddbhs: listDdbh.join(","), ddzt},
+                        success: function (res) {
+                    if (res.Code == 200) {
+                        layer.closeAll();
+                        changePostList(1);
+                        layer.msg(res.Msg, { icon: 1, time: 2000 });
+
+                    } else {
+                        layer.closeAll('loading');
+                        layer.msg(res.Msg, { icon: 2, time: 1000 });
+                    }
+                        },
+                error: function () {
+                    layer.closeAll('loading');
+                    layer.msg('保存失败', { icon: 2, time: 1000 });
+                    return;
+
+                }
+            });
+        }
+
+        //重新渲染表单函数
+        function renderForm() {
+            layui.use('form', function () {
+                var form = layui.form;
+                form.render();
+            });
+        }
+    </script>
+}

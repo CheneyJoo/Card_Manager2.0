@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "互联网订单管理系统_套餐组合项目";
+    Layout = "~/Views/Shared/_FormLayout.cshtml";
+}
+@model List<Model.XtZhxmbModel>
+
+<div class="main-content">
+    <div class="page-content">
+        <div class="page-content-area">
+            <table class="table table-striped table-bordered table-hover" id="sample-table-1">
+                <thead>
+                    <tr>
+                        <th>组合项目编号</th>
+                        <th>组合项目名称</th>
+                        <th>科室编号</th>
+                        <th>科室名称</th>
+                        <th>单价</th>
+                        <th>性别</th>
+                        <th>是否妇科</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr class="">
+                                <td>@item.zhxmbh</td>
+                                <td>@item.zhxmmc</td>
+                                <td>@item.zhxmksbh</td>
+                                <td>@item.zhxmksmc</td>
+                                <td>@item.zhxmjg.ToString("0.##")</td>
+                                @if (item.xb == 0)
+                                {
+                                    <td>女</td>
+                                }
+                                else if (item.xb == 1)
+                                {
+                                    <td>男</td>
+                                }
+                                else
+                                {
+                                    <td>通用</td>
+                                }
+                                <td>@(item.sffk == 0 ? "否" : "是")</td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <!-- /.page-content-area -->
+    </div>
+    <!-- /.page-content -->
+</div>
+<!-- /.main-content -->
+@section scripts {
+    <script>
+        jQuery(function ($) {
+
+        });
+    </script>
+}

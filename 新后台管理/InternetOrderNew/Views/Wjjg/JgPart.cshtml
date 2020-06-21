@@ -1,0 +1,47 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<Model.Wjjg>
+<table class="layui-table layui-form" lay-skin='nob'>
+    <thead>
+    <tr>
+        <th>医院编号</th>
+        <th>医院名称</th>
+        <th>问卷启用状态</th>
+        <th>录入时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.RowNum</td>
+                <td>@item.JGMC</td>
+                @if (item.WJZT.Equals(0))
+                {
+                    <td><span class="text_status text_status2">已停用</span></td>
+                }
+                else
+                {
+                    <td><span class="text_status">已启用</span></td>
+                }
+                <td>@item.CJSJ.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td class="tooltd">
+                    <a class="text_blue" href="javascript:;" onclick="update(@item.ID,@(item.WJZT.Equals(0)?1:0))">@(item.WJZT.Equals(0) ? "启用" : "停用")</a>
+                    <a href="javascript:;" class="text_blue" onclick="del('@item.ID')">删除</a>
+                    <a href="javascript:;" class="text_blue" onclick="edit('@item.YYBH')">配置套餐</a>
+                </td>
+            </tr>
+        }
+    }
+</table>
+@if (Model == null || Model.Count == 0)
+{
+    <div class="data_none"><img src="~/content/assets/images/nothing.png" alt=""></div>
+}
+<!-- 分页样式 -->
+@(ViewBag.Pager)

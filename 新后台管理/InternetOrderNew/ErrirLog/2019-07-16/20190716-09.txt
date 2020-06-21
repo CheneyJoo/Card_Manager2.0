@@ -1,0 +1,42 @@
+2019-07-16 09:32:11
+getToke-获取token报错=System.Net.WebException: 未能解析此远程名称: 'kpjkglwxgl.krmanager.comtoken'
+   在 System.Net.WebClient.UploadValues(Uri address, String method, NameValueCollection data)
+   在 System.Net.WebClient.UploadValues(String address, String method, NameValueCollection data)
+   在 Common.WebHelper.PostData_OAuth2_V1(String url, NameValueCollection parameters, NameValueCollection Headers, String type) 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Common\WebHelper.cs:行号 117
+   在 Service.HosHelper.NfykdxService.getToke() 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Service\HosHelper\NfykdxService.cs:行号 91
+2019-07-16 09:32:13
+getToke-获取token报错=System.Net.WebException: 未能解析此远程名称: 'kpjkglwxgl.krmanager.comtoken'
+   在 System.Net.WebClient.UploadValues(Uri address, String method, NameValueCollection data)
+   在 System.Net.WebClient.UploadValues(String address, String method, NameValueCollection data)
+   在 Common.WebHelper.PostData_OAuth2_V1(String url, NameValueCollection parameters, NameValueCollection Headers, String type) 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Common\WebHelper.cs:行号 117
+   在 Service.HosHelper.NfykdxService.getToke() 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Service\HosHelper\NfykdxService.cs:行号 91
+2019-07-16 09:33:09
+getToke-获取token报错=System.Net.WebException: 未能解析此远程名称: 'kpjkglwxgl.krmanager.comtoken'
+   在 System.Net.WebClient.UploadValues(Uri address, String method, NameValueCollection data)
+   在 System.Net.WebClient.UploadValues(String address, String method, NameValueCollection data)
+   在 Common.WebHelper.PostData_OAuth2_V1(String url, NameValueCollection parameters, NameValueCollection Headers, String type) 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Common\WebHelper.cs:行号 117
+   在 Service.HosHelper.NfykdxService.getToke() 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Service\HosHelper\NfykdxService.cs:行号 91
+2019-07-16 09:33:31
+getToke-获取token报错=System.Net.WebException: 未能解析此远程名称: 'kpjkglwxgl.krmanager.comtoken'
+   在 System.Net.WebClient.UploadValues(Uri address, String method, NameValueCollection data)
+   在 System.Net.WebClient.UploadValues(String address, String method, NameValueCollection data)
+   在 Common.WebHelper.PostData_OAuth2_V1(String url, NameValueCollection parameters, NameValueCollection Headers, String type) 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Common\WebHelper.cs:行号 117
+   在 Service.HosHelper.NfykdxService.getToke() 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Service\HosHelper\NfykdxService.cs:行号 91
+2019-07-16 09:35:07
+getToke-获取token报错=System.Net.WebException: 未能解析此远程名称: 'kpjkglwxgl.krmanager.comtoken'
+   在 System.Net.WebClient.UploadValues(Uri address, String method, NameValueCollection data)
+   在 System.Net.WebClient.UploadValues(String address, String method, NameValueCollection data)
+   在 Common.WebHelper.PostData_OAuth2_V1(String url, NameValueCollection parameters, NameValueCollection Headers, String type) 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Common\WebHelper.cs:行号 117
+   在 Service.HosHelper.NfykdxService.getToke() 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Service\HosHelper\NfykdxService.cs:行号 91
+2019-07-16 09:35:56
+getToke-获取token报错=System.Net.WebException: 未能解析此远程名称: 'kpjkglwxgl.krmanager.comtoken'
+   在 System.Net.WebClient.UploadValues(Uri address, String method, NameValueCollection data)
+   在 System.Net.WebClient.UploadValues(String address, String method, NameValueCollection data)
+   在 Common.WebHelper.PostData_OAuth2_V1(String url, NameValueCollection parameters, NameValueCollection Headers, String type) 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Common\WebHelper.cs:行号 117
+   在 Service.HosHelper.NfykdxService.getToke() 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Service\HosHelper\NfykdxService.cs:行号 91
+2019-07-16 09:36:59
+getToke-获取token报错=System.Net.WebException: 未能解析此远程名称: 'kpjkglwxgl.krmanager.comtoken'
+   在 System.Net.WebClient.UploadValues(Uri address, String method, NameValueCollection data)
+   在 System.Net.WebClient.UploadValues(String address, String method, NameValueCollection data)
+   在 Common.WebHelper.PostData_OAuth2_V1(String url, NameValueCollection parameters, NameValueCollection Headers, String type) 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Common\WebHelper.cs:行号 117
+   在 Service.HosHelper.NfykdxService.getToke() 位置 E:\Project\检前体检\程序\程序代码\个人\trunk\公共互联网接单平台\Service\HosHelper\NfykdxService.cs:行号 91

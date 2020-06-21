@@ -1,0 +1,166 @@
+﻿
+@{
+
+}
+@model List<Model.DdjbxxModel>
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+            <span class="layui-breadcrumb">
+                <a>企业团检管理</a>
+                <a  class="on">企业团检订单管理</a>
+            </span>
+        </div>
+    </div>
+    <div class="tool_pannel layui-form">
+
+        <div class="layui-form-item ">
+            <div class="layui-form-inline">
+                <label class="layui-form-label">企业名称：</label>
+                <div class="layui-input-inline"  style="width:150px">
+                    <select name="" id="dwbh" onselect="1" lay-search>
+                        <option value="">全部企业</option>
+                        @foreach (var item in ViewBag.QyList)
+                        {
+                            <option value="@item.key">@item.values</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label">订单日期：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="ddstart" placeholder="请选择">
+                </div>
+                <label class="layui-form-label" style="margin-right: 10px;">至</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="ddend" placeholder="请选择">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label">预约日期：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="yystart" placeholder="请选择">
+                </div>
+                <label class="layui-form-label" style="margin-right: 10px;">至</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" class="layui-input" id="yyend" placeholder="请选择">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-form-inline" >
+                <label class="layui-form-label" style="width: 70px;">姓名：</label>
+                <div class="layui-input-inline"  style="width:150px">
+                    <input type="text" class="layui-input" id="xm" placeholder="">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">手机号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder=""  id="dh">
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <label class="layui-form-label" style="width: 70px;">订单状态：</label>
+                <div class="layui-input-inline">
+                    <select id="tczt" name="tczt" onselect="1">
+                        <option value="">全部</option>
+                        <option value="2">预约中</option>
+                        <option value="3">预约成功</option>
+                        <option value="6">已到检</option>
+                        <option value="7">已完成</option>
+                        <option value="9">已出报告</option>
+                        <option value="8">已取消</option>                     
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</button>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-primary" onclick="cz(this)">重置</button>
+            </div>
+            <div class="layui-form-inline">
+                <button class="layui-btn layui-btn-blue" onclick="exportOrder()"><i class="iconfont icon-biaoge-xiazai"></i>导出订单</button>
+            </div>
+        </div>          
+    </div>
+    <div class="table_wrap">
+        @Html.Partial("OrderPart", Model)
+        <!-- 分页样式 -->
+    </div>
+</div>
+
+
+
+
+@section scripts {
+    <script>
+        //分页
+		function changePostList(page)
+        {
+		    var dwbh = $("#dwbh").val();
+		    var ddstart = $("#ddstart").val();
+		    var ddend = $("#ddend").val();
+		    var yystart=$("#yystart").val();
+		    var yyend=$("#yyend").val();
+		    var dh=$("#dh").val();
+		    var xm=$("#xm").val();
+		    var tczt = $("#tczt").val();
+		    var url = '@Url.Content("~/Qy/Order")'+"?page=" + page + "&dwbh=" + dwbh + "&ddstart=" + ddstart + "&ddend=" + ddend + "&yystart=" + yystart + "&yyend=" + yyend + "&xm=" + xm + "&dh=" + dh + "&tczt=" + tczt;
+		    var id = layer.load(0, { time: false, shade: 0.3 });
+		    $.get(url, function (data) {
+
+		        $(".table_wrap").html(data);
+		        layer.close(id);
+		    });
+		}
+		layui.use('laydate', function () {
+		    var laydate = layui.laydate;
+		    //执行一个laydate实例
+		    laydate.render({
+		        elem: '#ddstart' //指定元素
+		    });
+		    laydate.render({
+		        elem: '#ddend' //指定元素
+		    });
+		    laydate.render({
+		        elem: '#yystart' //指定元素
+		    });
+		    laydate.render({
+		        elem: '#yyend' //指定元素
+		    });
+		});
+
+		function exportOrder() {
+
+		    var dwbh = $("#dwbh").val();
+		    var ddstart = $("#ddstart").val();
+		    var ddend = $("#ddend").val();
+		    var yystart = $("#yystart").val();
+		    var yyend = $("#yyend").val();
+		    var dh = $("#dh").val();
+		    var xm = $("#xm").val();
+		    var tczt = $("#tczt").val();
+		    var url = '@Url.Content("~/Qy/ExportExcel")'+"?dwbh=" + dwbh + "&ddstart=" + ddstart + "&ddend=" + ddend + "&yystart=" + yystart + "&yyend=" + yyend + "&xm=" + xm + "&dh=" + dh + "&tczt=" + tczt;
+
+
+
+		    //var list = $('#idListBody').find(':checkbox');
+		    //var listDdbh = [];
+		    //list.each(function () {
+		    //    if (this.checked) {
+		    //        listDdbh.push(this.getAttribute("ddbh"));
+		    //    }
+		    //});
+		    //if (listDdbh.length == 0) {
+		    //    showmsg("请选择订单", 2, 1);
+		    //    return;
+		    //}
+		    //var url = "/Qudao/ExportExcel?ddbh=" + listDdbh.join(",");
+		    location.href = url;
+		}
+    </script>
+}

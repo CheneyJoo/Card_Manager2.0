@@ -1,0 +1,197 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string xxr = Model.xxr.Replace("0", "星期日").Replace("1", "星期一").Replace("2", "星期二").Replace("3", "星期三").Replace("4", "星期四").Replace("5", "星期五").Replace("6", "星期六").Replace("|", " ");
+}
+@model Model.PqJbszModel
+@section head{
+    <link href="~/Content/css/pqindex.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery.cxcalendar.css" rel="stylesheet" />
+    <style type="text/css">
+    </style>
+    <script src="~/Content/js/Scheduling.js"></script>
+    <script src="~/Content/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/Content/js/timeformat.js"></script>
+    <script src="~/Content/js/json.js"></script>
+}
+<div class="main-content">
+    <div class="page-content">
+        <form id="form1">
+            <div class="bCon_rig">
+                <div class="bCon_scheduHead">
+                    <ul>
+                        <li class="setupPic1">
+                            <p>@(Model.id == 0 ? "" : Model.zdjd.ToString())</p>
+                            <p>每天最大接待量</p>
+                        </li>
+                        <li class="setupPic2">
+                            <p>@(Model.id == 0 ? "" : Model.skyl.ToString())</p>
+                            <p>散客预留量</p>
+                        </li>
+                        <li class="setupPic3">
+                            <p>@(Model.id == 0 ? "" : Model.qtyl.ToString())</p>
+                            <p>其它预留量</p>
+                        </li>
+                        <li class="setupPic4">
+                            <p>@(Model.id == 0 ? "" : Model.tjyl.ToString())</p>
+                            <p>团检可排期量</p>
+                        </li>
+                        <li class="setupPic5">
+                            <p id="xxr">@(xxr)&nbsp;</p>
+                            <p>休息时间</p>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <h4 class="widget-title">预留名额设置</h4>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main a1">
+                            <p>
+                                每天最大接待量：
+                                <input type="text" value="@(Model.id==0?"":Model.zdjd.ToString())" onkeyup="this.value=this.value.replace(/\D|[0-9]{6,}/g, '' )" id="zdjd" name="zdjd" />
+                            </p>
+                            <p>
+                                每天团检预留量：
+                                <input type="text" value="@(Model.id==0 ? "" : Model.tjyl.ToString())" onkeyup="this.value=this.value.replace(/\D|[0-9]{6,}/g, '' )" id="tjyl" name="tjyl" />
+                            </p>
+
+                            <div>
+                                根据你以上的设置，您每天个人体检可安排<span style="color:#fd8000;" id="load_tjjlr">@(Model.skyl)</span>人
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <h4 class="widget-title">休息日设置</h4>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <div class="weekInfo_create">
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="xxr" type="checkbox" @(Model.xxr.Contains('0') ? "checked" : "") value="0" class="ace">
+                                        <span class="lbl"> 周日</span>
+                                    </label>
+                                    <label>
+                                        <input name="xxr" type="checkbox" @(Model.xxr.Contains('1') ? "checked" : "") value="1" class="ace">
+                                        <span class="lbl">周一</span>
+                                    </label>
+                                    <label>
+                                        <input name="xxr" type="checkbox" @(Model.xxr.Contains('2') ? "checked" : "") value="2" class="ace">
+                                        <span class="lbl">周二</span>
+                                    </label>
+                                    <label>
+                                        <input name="xxr" type="checkbox" @(Model.xxr.Contains('3') ? "checked" : "") value="3" class="ace">
+                                        <span class="lbl">周三</span>
+                                    </label>
+                                    <label>
+                                        <input name="xxr" type="checkbox" @(Model.xxr.Contains('4') ? "checked" : "") value="4" class="ace">
+                                        <span class="lbl">周四</span>
+                                    </label>
+                                    <label>
+                                        <input name="xxr" type="checkbox" @(Model.xxr.Contains('5') ? "checked" : "") value="5" class="ace">
+                                        <span class="lbl">周五</span>
+                                    </label>
+                                    <label>
+                                        <input name="xxr" type="checkbox" @(Model.xxr.Contains('6') ? "checked" : "") value="6" class="ace">
+                                        <span class="lbl">周六</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="weekInfo_create">
+                                <br />
+                                <span>暂停预约设置（体检中心不能预约的日期）：</span>
+                                <br />
+                                <div id="div1"></div>
+                                <textarea rows="5" id="ztyy" name="ztyy" style="width: 500px">@(Model.ztyy)</textarea>
+                                <br />
+                                <span>特殊可约日期（可以预约的特殊日期）：</span>
+                                <br />
+                                <div id="div2"></div>
+                                <textarea rows="5" style="width: 500px" id="tsky" name="tsky">@(Model.tsky)</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div style="height: 100px; line-height: 100px; text-align: center;">
+                    <a class="btn btn-sm btn-primary" onclick="Submit()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;确定&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script>
+        WdatePicker({
+            eCont: 'div2',
+            onpicked: function (dp) {
+
+                var val = dp.cal.getDateStr()
+                if ($('#tsky').val() == '') {
+                    if (window.confirm('确定添加？')) {
+                        $('#tsky').val(val)
+                    }
+
+                } else {
+                    if ($('#tsky').val().indexOf(val) >= 0) {
+                        if (window.confirm('确定删除？')) {
+                            $('#tsky').val($('#tsky').val().replace(',' + val, '').replace(val + ',', '').replace(val, ''))
+                        }
+
+                    } else {
+                        if (window.confirm('确定添加？')) {
+                            $('#tsky').val($('#tsky').val() + ',' + val)
+                        }
+                    }
+                }
+            }
+        })
+        WdatePicker({
+            eCont: 'div1',
+            onpicked: function (dp) {
+
+                var val = dp.cal.getDateStr()
+                if ($('#ztyy').val().trim() == '') {
+                    if (window.confirm('确定添加？')) {
+                        $('#ztyy').val(val)
+                    }
+
+                } else {
+                    if ($('#ztyy').val().indexOf(val) >= 0) {
+                        if (window.confirm('确定删除？')) {
+                            $('#ztyy').val($('#ztyy').val().replace(',' + val, '').replace(val + ',', '').replace(val, ''))
+                        }
+
+                    } else {
+                        if (window.confirm('确定添加？')) {
+                            $('#ztyy').val($('#ztyy').val() + ',' + val)
+                        }
+                    }
+                }
+            }
+        })
+
+        function Submit() {
+            $.ajax({
+                url: "@Url.Action("Index")",
+                data: $("#form1").serialize(),
+                dataType: "json",
+                type: "post",
+                success: function (res) {
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
+}

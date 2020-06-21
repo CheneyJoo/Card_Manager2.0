@@ -1,0 +1,149 @@
+﻿@{
+    Layout = null;
+    List<Model.XtMenuModel> li = ViewBag.LiQx;
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="~/Content/assets/css/layui.css">
+    <link rel="stylesheet" href="~/Content/assets/font2/iconfont.css">
+    <link rel="stylesheet" href="~/Content/assets/css/admin.css">
+    <link rel="stylesheet" href="~/Content/assets/css/view.css" />
+    <link rel="icon" href="/favicon.ico">
+    <title>安网电销卡管理系统</title>
+    <script type="text/javascript">
+
+    </script>
+
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header custom-header">
+
+            <ul class="layui-nav layui-layout-left">
+                <li class="slide-sidebar" lay-unselect style="line-height: 70px;">
+                    <a href="javascript:;" class="icon-font"><i class="ai ai-menufold"></i></a>
+                </li>
+            </ul>
+
+
+            <ul class="topnav_right">               
+                <li>
+                    <span class="topnav_userImgBox">
+                        <img src="~/Content/assets/images/photo/15.png" alt="" class="layui-nav-img">
+                        @*<img src="@ViewBag.Txlj" alt="" class="layui-nav-img">*@
+                        @GLYadmin.GLYUserAccount
+                    </span>
+                    <div class="topnav_con" style="left: -108px;">
+                        <ul class="grzxBox">
+                            <li>
+                                <a href="@Url.Content("~/Home/Grzx")">
+                                    <i class="layui-icon">&#xe66f;</i>个人中心
+                                </a>
+                            </li>
+                            @*<li>
+                                    <a href="#">
+                                        <i class="layui-icon">&#xe716;</i>设置
+                                    </a>
+                                </li>*@
+                            <li>
+                                <a href="javascript:;" onclick="loginOut()">
+                                    <i class="iconfont icon-tuichu-"></i>退出登录
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="layui-side custom-admin">
+            <div class="layui-side-scroll">
+                <div class="custom-logo">
+                    <img src="~/Content/assets/images/Dlogo.png" alt="" />
+                    <h1><img src="~/Content/assets/images/title.png" alt=""></h1>
+                </div>
+                <ul id="Nav" class="layui-nav layui-nav-tree">
+                    @foreach (var item in li.Where(x => x.scid == 0))
+                    {
+                        var childList = li.Where(y => y.scid == item.Id).ToList();
+                        <li class="nav-item">
+                            <a href="@(string.IsNullOrEmpty(item.url)?"javascript:;":Url.Content(item.url))">
+                                <i class="@item.icon"></i>
+                                <em>@item.mc</em>
+                            </a>
+                            @if (childList.Count > 0)
+                            {
+                                <dl class="nav-child">
+                                    @foreach (var item1 in childList)
+                                    {
+                                        <dd><a href="@Url.Content(item1.url)">@item1.mc</a></dd>
+                                    }
+                                </dl>
+                                <ul class="fold_menu">
+                                    @foreach (var item1 in childList)
+                                    {
+                                        <li><a href="@Url.Content(item1.url)">@item1.mc</a></li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body" id="iframeWrap" style="overflow:initial;">
+            <iframe class="x-iframe" id="myIframe" style="border:0;"  name="right_frame"></iframe>
+        </div>
+        <div class="layui-footer" style="text-align: center;">
+            <p>copyright &copy; 2020 安网</p>
+        </div>
+        <div class="mobile-mask"></div>
+    </div>
+    <!-- 退出登录弹窗 -->
+    <div class="outDialog Dialog">
+        <h3>操作提示</h3>
+        <p>您确定要退出系统吗？</p>
+        <div class="buttonwrap">
+            <a href="javascript:;" class="layui-btn layui-btn-primary" id="closeLoginBtn" onclick="closeDialog(this)">取消</a>
+            <a href="@Url.Content("~/Login/LogOut")" class="layui-btn layui-btn-blue" id="loginOutBtn">确定</a>
+        </div>
+    </div>
+
+    <script src="~/Content/assets/jquery.js"></script>
+    <script src="~/Content/assets/layui.all.js"></script>
+    <script src="~/Content/Js/home.js"></script>
+    <script src="~/Content/Js/jiaohu.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.topnav_right>li').click(function () {
+                $(this).siblings().find('.topnav_con').slideUp();
+                $(this).find('.topnav_con').slideToggle();
+                return false;
+            });
+            $(document).click(function () {
+                $('.topnav_con').slideUp();
+            })
+        })
+        function loginOut() {
+            layer.open({
+                type: 1,
+                content: $('.outDialog'),
+                title: '',
+                closeBtn: 0,
+                area: ['auto', 'auto']
+            })
+        }
+        function closeDialog(that) {
+            layer.closeAll();
+            $(that).parents('.Dialog').hide();
+        }
+     
+    </script>
+</body>
+</html>

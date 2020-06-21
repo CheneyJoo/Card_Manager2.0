@@ -1,0 +1,210 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddPersonList</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/assets/css/bootstrap.min.css")" />
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+
+    <script src="@Url.Content("~/Content/assets/js/jquery.2.1.1.min.js")"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <style>
+        #table1 tr td:first-child { text-align: center; }
+        .dataTables_info { float: right; margin-top: 10px; }
+        .toolbar { float: left; padding: 10px 20px 10px; }
+    </style>
+</head>
+<body>
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="xm">姓名</label>
+            <input type="text" class="form-control" id="xm" name="xm" placeholder="" style="width:100px">
+        </div>
+        <div class="form-group">
+            <label for="dh">手机号</label>
+            <input type="text" class="form-control" id="dh" name="dh" placeholder="" style="width:150px">
+        </div>
+        @*<div class="form-group">
+            <label for="bm">企业</label>
+            <input type="text" class="form-control" id="bm" name="bm" placeholder="" style="width:150px">
+        </div>*@
+        <div class="form-group">
+            <label for="xb">性别</label>
+            <select class="form-control" id="xb" name="xb">
+                <option value="-1">不限</option>
+                <option value="1">男</option>
+                <option value="0">女</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="tcmc">套餐名称</label>
+            <input type="text" class="form-control" id="tcmc" name="tcmc" placeholder="" style="width:160px">
+        </div>
+        <a class="btn btn-primary" onclick="Search()">搜索</a>
+    </form>
+
+    <div>
+
+        <table id="table1" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="text-align:center"><input type="checkbox" /></th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>手机</th>
+                    <th>企业</th>
+                    <th>套餐名称</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        var fzid=@Request["fzid"];
+        var dwbh='@Request["dwbh"]';
+        var language = {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            }
+        };
+
+        var table
+        $(function () {
+            table = $("#table1").DataTable({
+                ajax: {
+                    url: "@Url.Action("GetAddPersonList")",
+                    type: "post",
+                    data: function (d) {
+                        d.fzid=fzid;
+                        d.dwbh=dwbh;
+                        d.xm=$("#xm").val();
+                        d.dh=$("#dh").val();
+                        //d.bm=$("#bm").val();
+                        d.xb=$("#xb").val();
+                        d.tcmc=$("#tcmc").val();
+                    }
+                },
+                processing: true,
+                serverSide: true,
+                searching: false,
+                language: language,
+                ordering: false,
+                pagingType: "full_numbers",
+                columns: [
+                   {
+                       "data": null,"width":"50", "render": function (data, type, row, meta) {
+                           return ' <input type="checkbox"  value="' + row.id + '"/>';
+                       }
+                   },
+                   { "data": "xm" },
+                    {
+                        "data": "xb", "render": function (data, type, row, meta) {
+                            var html = "";
+                            if (data == 1)
+                                html = "男";
+                            else if (data == 0)
+                                html = "女";
+                            return html;
+                        }
+                    },
+                   { "data": "dh" },
+                   { "data": "bmmc" },
+                   { "data": "tcmc" },
+                   {
+                       "data": null, "render": function (data, type, row, meta) {
+                           var html = '<button class="btn btn-xs btn-success" style="margin-right:5px" onclick="Add(' + row.id + ',this)">添加</button>';
+                           return html;
+                       }
+                   }
+                ],
+                dom: "<'toolbar'>irtp",
+                fnInitComplete: function(){
+                    $('div.toolbar').html('<button class="btn btn-danger" style="margin-right:5px" onclick="BatchAdd(this)">批量添加</button>');
+                }
+            })
+        })
+        $("#table1").on("click","thead  input[type='checkbox']",function(){
+            if($(this).is(':checked')){
+
+                $.each($("#table1 tbody input[type='checkbox']"),function(i,item){
+                    $(item).prop('checked',true);
+                })
+            }else{
+                $.each($("#table1 tbody input[type='checkbox']"),function(i,item){
+                    $(item).prop('checked',false);
+                })
+            }
+        })
+
+        function Search(){
+            table.ajax.reload();
+        }
+
+        function Add(id,e){
+            $(e).attr("disabled",true);
+            $.ajax({
+                url: "@Url.Action("AddPerson")",
+                dataType: "json",
+                type: "post",
+                data: {qyygid:id,fzid:fzid},
+                success: function (res) {
+                    alert("添加成功");
+                    table.ajax.reload();
+                    window.parent.table.ajax.reload();
+                }
+            })
+        }
+        function BatchAdd(e)
+        {
+
+            var list=[];
+            $.each($("#table1 tbody input[type='checkbox']:checked"),function(i,item){
+                list.push($(item).val());
+            })
+            if(list.length==0){
+                alert("请至少选择一条数据");
+                return;
+            }
+            $(e).attr("disabled",true);
+            var str=list.join(",");
+            $.ajax({
+                url: "@Url.Action("BatchAddPerson")",
+                dataType: "json",
+                type: "post",
+                data: {qyygids:str,fzid:fzid},
+                success: function (res) {
+                    alert("添加成功");
+                    $("#table1 thead input[type='checkbox']").prop('checked',false);
+                    table.ajax.reload();
+                    window.parent.table.ajax.reload();
+                    $(e).attr("disabled",false);
+                }
+            })
+        }
+    </script>
+</body>
+</html>

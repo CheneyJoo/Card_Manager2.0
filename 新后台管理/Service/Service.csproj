@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{116EED58-9633-4D0A-A2B5-DE8E3521921C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Service</RootNamespace>
+    <AssemblyName>Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CSService.cs" />
+    <Compile Include="DdJbxxService.cs" />
+    <Compile Include="DdJyjlbService.cs" />
+    <Compile Include="DdTkjlbService.cs" />
+    <Compile Include="DdTksqjlbService.cs" />
+    <Compile Include="DdZhxmService.cs" />
+    <Compile Include="HosHelper\NfykdxService.cs" />
+    <Compile Include="HosHelper\PublicKkService.cs" />
+    <Compile Include="JsddService.cs" />
+    <Compile Include="JsqxService.cs" />
+    <Compile Include="JsglbService.cs" />
+    <Compile Include="PagingService.cs" />
+    <Compile Include="PqJbszService.cs" />
+    <Compile Include="PqPlszjlService.cs" />
+    <Compile Include="PqQyRqService.cs" />
+    <Compile Include="PqQyszService.cs" />
+    <Compile Include="PqService.cs" />
+    <Compile Include="PqTjrqService.cs" />
+    <Compile Include="PqTjsjService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DapperConnection.cs" />
+    <Compile Include="DdyymxbService.cs" />
+    <Compile Include="QuDaoTkService.cs" />
+    <Compile Include="QuDaoJbxxService.cs" />
+    <Compile Include="QyJxbService.cs" />
+    <Compile Include="QyyyService.cs" />
+    <Compile Include="ReportQdService.cs" />
+    <Compile Include="ReportQyService.cs" />
+    <Compile Include="TjFzryService.cs" />
+    <Compile Include="TjFzService.cs" />
+    <Compile Include="Tjtj\WjbqService.cs" />
+    <Compile Include="Tjtj\WjgzService.cs" />
+    <Compile Include="Tjtj\WjjgService.cs" />
+    <Compile Include="Tjtj\WjtcService.cs" />
+    <Compile Include="Tjtj\WjtmService.cs" />
+    <Compile Include="XtjgbService.cs" />
+    <Compile Include="QyygjbxxService.cs" />
+    <Compile Include="XttcbService.cs" />
+    <Compile Include="XtYhbService.cs" />
+    <Compile Include="XtzhbService.cs" />
+    <Compile Include="QyjbxxService.cs" />
+    <Compile Include="XtzhxmService.cs" />
+    <Compile Include="XT_ZZB.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{3b33806d-b68b-4085-9fc1-1816d54b2653}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{2e31a38a-9e10-4461-85a3-1e784345c358}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HosHelper\文件夹说明.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

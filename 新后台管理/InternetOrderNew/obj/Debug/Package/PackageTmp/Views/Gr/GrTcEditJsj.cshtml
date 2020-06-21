@@ -1,0 +1,76 @@
+﻿@model Model.XttcbModel
+@{
+    Layout = "~/Views/Shared/_FormLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- PAGE CONTENT BEGINS -->
+
+        <form method="post" action="/Gr/GrTcEditJsj" class="form-inline" id="AddForm">
+            @Html.HiddenFor(p => p.id)
+         
+            <div class="form-group">
+                <label class="inline">
+                    <span class="lbl">套餐名称：</span>
+                    <input type="text" class="input-large" placeholder="" id="tcmc" name="tcmc" value="@Model.tcmc" readonly="readonly">
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="inline">
+                    <span class="lbl">套餐编号：</span>
+                    <input type="text" class="input-large" id="tcbh" name="tcbh" value="@Model.tcbh" maxlength="50" readonly="readonly">
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="inline">
+                    <span class="lbl">价格：</span>
+                    <input type="text" class="input-large" placeholder="" id="jg" name="jg" value="@Model.jg" maxlength="20" readonly="readonly">
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="inline">
+                    <span class="lbl">结算价：</span>
+                    <input type="text" class="input-large" placeholder="" id="jsj" name="jsj" value="@Model.jsj" maxlength="20">
+                </label>
+            </div>
+
+            <div class="clearfix form-actions" style="text-align:center">
+                <button id="Save" type="button" class="btn btn-info">
+                    <i class="ace-icon fa fa-check bigger-110"></i>
+                    确认修改
+                </button>
+
+            </div>
+        </form>
+
+    </div><!-- /.col -->
+</div>
+
+
+@section scripts {
+    <script>
+        //这里放本页面js代码
+
+        jQuery(function ($) {
+
+           var ok = "@(ViewBag.ok)";
+            if (ok == "1") {
+                alert("保存成功");
+                $(".close", window.parent.document).trigger("click");
+                parent.window.location = "/Gr/TcList";
+            }
+            var msg = "@(ViewBag.msg)";
+            if (msg.length > 0) {
+                alert(msg);
+            }
+
+            //确认
+            $("#Save").click(function () {
+                $("#AddForm").submit();
+            });
+        });
+
+
+    </script>
+}

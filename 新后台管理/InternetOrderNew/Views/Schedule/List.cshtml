@@ -1,0 +1,83 @@
+﻿
+@{
+    Layout = null;
+    List<Model.Dto.QdDto> qdList = ViewBag.QdList;
+}
+@model List<Model.PqQyModel>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">  
+    <link rel="stylesheet" href="~/Content/assets/css/layui.css?v=2">
+    <link rel="stylesheet" href="~/Content/assets/font2/iconfont.css">
+    <link rel="stylesheet" href="~/Content/assets/css/view.css" />
+    <link rel="stylesheet" href="~/Content/assets/css/admin.css" />
+    <link rel="icon" href="/favicon.ico">
+    <title></title>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <style>
+        body{overflow-y: scroll;}
+    </style>
+</head>
+<body class="layui-view-body">
+
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                    <a href="">第三方平台管理</a>
+                    <a  class="on">渠道排期设置</a>
+                </span>
+            </div>
+        </div>
+        <div class="tool_pannel">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-form-inline">
+                        <label class="layui-form-label">渠道名称：</label>
+                        <div class="layui-input-inline">
+                            <select name="qdid" id="qdid">
+                                <option value=""></option>
+                                @foreach (var item in qdList)
+                                {
+                                    <option value="@item.id">@item.dsfbz</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-inline">
+                        <a class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</a>
+                    </div>
+                </div>
+                <a class="layui-btn layui-btn-blue" href="edit"><i class="layui-icon">&#xe654;</i>新增排期</a>
+            </form>
+        </div>
+        <div class="table_wrap">
+            @Html.Partial("ListPart", Model)
+            <!-- 分页样式 -->
+
+        </div>
+    </div>
+    <script src="/Content/assets/layui.all.js"></script>
+    <script type="text/html" id="barDemo">
+        <a class="text_blue" lay-event="edit">编辑</a>
+    </script>
+    <script>
+        function changePostList(page) {
+
+            var qdid = $("#qdid").val();
+           
+            var url = "/Schedule/List?page=" + page + "&qdid=" + qdid;
+            var id = layer.load(0, { time: false, shade: 0.3 });
+            $.get(url, function (data) {
+
+                $(".table_wrap").html(data);
+                layer.close(id);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

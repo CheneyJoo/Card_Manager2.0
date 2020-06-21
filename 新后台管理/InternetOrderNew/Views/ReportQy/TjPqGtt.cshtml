@@ -1,0 +1,268 @@
+﻿
+@{
+    int s = 1;
+    List<PqTjrqModel> li = ViewBag.QyTotal;
+    List<Model.Dto.ReportQy.GttHj> liHj= ViewBag.QyHj;
+}
+
+<div class="layui-content">
+    <div class="layui-page-header">
+        <div class="pagewrap">
+            <span class="layui-breadcrumb">
+                <a>报表中心</a>
+                <a class="on">企业排期报表</a>
+            </span>
+        </div>
+    </div>
+    <div style="padding:30px;background:#fff">
+        <div class="gante_wraps">
+            <div class="left">
+                <table>
+                    <tr>
+                        <td colspan="2" class="title_td">
+                            <div class="hsLine_box">
+                                <b>月份</b>
+                                <span>企业名称</span>
+                            </div>
+                        </td>
+                    </tr>
+                  
+                    @foreach (Model.Dto.ReportQy.GttQy item in ViewBag.QyList)
+                    {
+                       
+                       <tr>
+                        <td>@(s++)</td>
+                        <td>@item.qymc</td>
+                      </tr>
+                    }
+                    <tr>
+                        <td colspan="2">到检合计</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right">
+                <div class="right_wrap">                
+                    @for (int j = 0; j < 3; j++)
+                    {
+                     <table>
+                        <tr>
+                            <td colspan="31">@DateTime.Now.AddMonths(-1+j).Month.ToString()月</td>
+                        </tr>
+                        <tr>
+                            @for (int i = 1; i <= Common.CommonFunction.HowMonthDay(DateTime.Now.AddMonths(-1 + j).Year, DateTime.Now.AddMonths(-1 + j).Month); i++)
+                            {
+                                <td>@i</td>
+                            }                            
+                         
+                        </tr>
+                         @foreach (Model.Dto.ReportQy.GttQy item in ViewBag.QyList)
+                         {
+                             <tr>
+                                 @for (int i = 1; i <= Common.CommonFunction.HowMonthDay(DateTime.Now.AddMonths(-1 + j).Year, DateTime.Now.AddMonths(-1 + j).Month); i++)
+                                 {
+                                     string date = Convert.ToDateTime(DateTime.Now.AddMonths(-1 + j).ToString("yyyy-MM") + "-01").AddDays(-1 + i).ToString("yyyy-MM-dd");
+                                     if (li.Where(p => p.qybh == item.qybh && p.rq.ToString("yyyy-MM-dd") == date).Count() > 0)
+                                     {
+                                         if (item.id > 12)
+                                         {
+                                            <td class="color@(item.id-12)"></td>   }
+                                         else
+                                         {
+                                        <td class="color@(item.id)"></td>
+                                         }
+                                     }
+                                     else
+                                     {
+                                        <td ></td>
+                                     }
+                                 }
+                             </tr>
+                         }    
+                         <tr>
+                             @*合计*@
+                             @for (int i = 1; i <= Common.CommonFunction.HowMonthDay(DateTime.Now.AddMonths(-1 + j).Year, DateTime.Now.AddMonths(-1 + j).Month); i++)
+                             {
+                                 string date = Convert.ToDateTime(DateTime.Now.AddMonths(-1 + j).ToString("yyyy-MM") + "-01").AddDays(-1 + i).ToString("yyyy-MM-dd");
+
+                                 if (liHj.Where(p => p.yysj == date).Count() > 0)
+                                 {
+                                    <td>@liHj.Where(p => p.yysj == date).FirstOrDefault().counts</td>
+
+                                 }
+                                 else
+                                 {
+                                    <td> </td>
+                                 }
+                             }
+                         </tr>                   
+                    </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section styles {
+   <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .gante_wraps {
+        overflow: hidden;
+    
+        border: 1px solid #e6e6e6;
+        background:#fff;
+    }
+
+        .gante_wraps .left {
+            float: left;
+            margin-left: -1px;
+            margin-top: -1px;
+            margin-bottom: -1px;
+            width: 332px;
+        }
+
+            .gante_wraps .left td {
+                height: 30px;
+                min-width: 30px;
+                text-align: center;
+            }
+
+            .gante_wraps .left .title_td {
+                height: 62px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .gante_wraps .left table {
+                width: 100%;
+            }
+
+            .gante_wraps .left .title_td b {
+                font-weight: normal;
+                position: absolute;
+                left: 20px;
+                height: 62px;
+                line-height: 80px;
+                top: 0;
+            }
+
+            .gante_wraps .left .title_td:after {
+                position: absolute;
+                content: '';
+                width: 100%;
+                height: 1px;
+                background: #999;
+                left: 0;
+                top: 50%;
+                transform: rotate(10deg);
+            }
+
+            .gante_wraps .left .title_td span {
+                position: absolute;
+                right: 20px;
+                height: 62px;
+                line-height: 40px;
+                top: 0;
+            }
+
+            .gante_wraps .left tr td:last-child {
+                padding: 0 20px;
+            }
+
+        .gante_wraps .right {
+            overflow: hidden;
+        }
+
+        .gante_wraps table, .gante_wraps tr, .gante_wraps td {
+            border-collapse: collapse;
+            border: 1px solid #e6e6e6;
+        }
+
+        .gante_wraps .right table {
+            display: inline-block;
+            text-align: center;
+            margin-right: 22px;
+        }
+
+        .gante_wraps .right_wrap {
+            white-space: nowrap;
+            overflow: auto;
+            margin-top: -1px;
+            margin-left: -1px;
+            margin-bottom: -1px;
+        }
+
+        .gante_wraps .right td {
+            width: 30px;
+            height: 30px;
+        }
+
+    .color1 {
+        background: #ff4d4f;
+        border-color: #ff4d4f !important;
+    }
+
+    .color2 {
+        background: #ff7a45;
+        border-color: #ff7a45 !important;
+    }
+
+    .color3 {
+        background: #ffa940;
+        border-color: #ffa940 !important;
+    }
+
+    .color4 {
+        background: #ffc53d;
+        border-color: #ffc53d !important;
+    }
+
+    .color5 {
+        background: #ffec3d;
+        border-color: #ffec3d !important;
+    }
+
+    .color6 {
+        background: #bae637;
+        border-color: #bae637 !important;
+    }
+
+    .color7 {
+        background: #73d13d;
+        border-color: #73d13d !important;
+    }
+    .color8 {
+        background: #36cfc9;
+        border-color: #36cfc9 !important;
+    }
+    .color9{
+        background: #40a9ff;
+        border-color: #40a9ff !important;
+    }
+     .color10 {
+        background: #597ef7;
+        border-color: #597ef7 !important;
+    }
+     .color11 {
+        background: #9254de;
+        border-color: #9254de !important;
+    }
+       .color12 {
+        background: #f759ab;
+        border-color: #f759ab !important;
+    }
+</style>
+}
+
+@section scripts {
+    <script>
+      
+
+    </script>
+}

@@ -1,0 +1,438 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Model.KeyValueModel> qyList = ViewBag.qyList;
+}
+
+@section head{
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <style>
+        .dataTables_wrapper table tr td { vertical-align: middle; }
+        .dataTables_info { float: right; margin-top: 10px; }
+        .toolbar { float: left; padding: 0 20px 10px; }
+        .dataTables_length { float:left}
+        #jstcmc[readonly] { background-color:#ffffff}
+        #dwbh_chosen { width:100% !important}
+    </style>
+
+}
+<div class="main-content">
+    <div class="main-content-inner">
+        <input type="hidden" name="yybh" id="yybh" value="@GLYadmin.YYID" />
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+            </script>
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a href="/home/index">首页</a>
+                </li>
+                <li>
+                    <a href="/group/index" class="on">团检分组管理</a>
+                </li>
+            </ul>
+            <!-- /.breadcrumb -->
+        </div>
+        <div class="page-content">
+            <form class="form-inline" id="form1">
+                <div class="row" style="padding-left:20px">
+
+                    <div class="form-group">
+                        <label for="groupName">分组名称：</label>
+                        <input type="text" class="form-control" id="groupName" name="groupName" style="width:200px" placeholder="">
+                    </div>
+                    <a class="btn btn-primary" onclick="Search()">搜索</a>
+                </div>
+
+            </form>
+            <div style="margin-top:10px">
+                <table id="table1" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>组名称</th>
+                            <th>企业名称</th>
+                            <th>家属免单数</th>
+                            <th>小组总人数</th>
+                            <th>体检时间</th>
+                            <th>添加时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="addGroup" class="modal">
+        <div class="modal-dialog" style="margin-top:5%; width:500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="title" class="blue bigger">添加分组</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form2" class="form-horizontal">
+                        <input type="hidden" name="yybh" value="@GLYadmin.YYID" />
+                        <input type="hidden" id="id" name="id" value="0" />
+                        <div class="form-group">
+                            <label for="mc" class="col-sm-3 control-label">分组名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="mc" name="mc" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mc" class="col-sm-3 control-label">企业名称</label>
+                            <div class="col-sm-9">
+                                <select class="chosen-select form-control" id="dwbh" name="dwbh" data-placeholder="清选择企业" style="width:100%">
+                                    <option value=""> </option>
+                                    @foreach (var item in qyList)
+                                    {
+                                        <option value="@item.key">@item.values</option>
+                                    }                                  
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="jsmds" class="col-sm-3 control-label">家属免单单数</label>
+                            <div class="col-sm-9">
+                                <input type="number" min="0" class="form-control" id="jsmds" name="jsmds" value="0" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="jstc" class="col-sm-3 control-label">家属套餐</label>
+                            <div class="col-sm-9">
+                                <input type="hidden" id="jstc" name="jstc" />
+                                <textarea rows="2" class="form-control" id="jstcmc" name="jstcmc" readonly onclick="ShowPakage()" style="cursor:pointer"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tjsj" class="col-sm-3 control-label">体检时间</label>
+                            <div class="col-sm-9 input-group" style="padding-left:12px;padding-right:12px">
+                                @{ var today = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));}
+                                <input type="text" class="input-sm form-control" name="tjkssj" id="tjkssj" value="@today.ToString("yyyy-MM-dd HH:mm")">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-exchange"></i>
+                                </span>
+                                <input type="text" class="input-sm form-control" name="tjjssj" id="tjjssj" value="@today.AddDays(1).ToString("yyyy-MM-dd HH:mm")">
+                            </div>
+                        </div>
+                        <div style="text-align:center">
+                            <a class="btn btn-primary" onclick="Save()">提交</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="addPerson" class="modal">
+        <div class="modal-dialog" style="margin-top:5%; width:80%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="title" class="blue bigger">添加人员</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe src="" style="width:100%; border:0;min-height:600px;overflow-x:hidden"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="showPerson" class="modal">
+        <div class="modal-dialog" style="margin-top:5%; width:80%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="title" class="blue bigger">分组人员列表</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe src="" style="width:100%; border:0;min-height:600px;overflow-x:hidden"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="showPakage" class="modal">
+        <div class="modal-dialog" style="margin-top:5%; width:800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="title" class="blue bigger">家属套餐设置</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe src="" style="width:100%; border:0;min-height:600px;overflow-x:hidden"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/assets/js/date-time/bootstrap-datetimepicker.min.js"></script>
+<script src="~/Content/assets/js/chosen.jquery.min.js"></script>
+    <script>
+        $.fn.datetimepicker.dates['zh-CN'] = {
+            days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+            daysShort: ["日", "一", "二", "三", "四", "五", "六", "日"],
+            daysMin: ["日", "一", "二", "三", "四", "五", "六", "日"],
+            months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            monthsShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+            meridiem: ["上午", "下午"],
+            //suffix:      ["st", "nd", "rd", "th"],
+            today: "今天"
+        };
+
+        var language = {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            }
+        };
+     
+        
+        var table
+        $(function () {
+            table = $("#table1").DataTable({
+                ajax: {
+                    url: "@Url.Action("GetList")",
+                    type: "post",
+                    data: function (d) {
+                        d.mc = $("#groupName").val();
+                    }
+                },
+                processing: true,
+                serverSide: true,
+                searching: false,
+                language: language,
+                ordering: false,
+                pagingType: "full_numbers",
+                columns: [
+                   {
+                       "data": null, "render": function (data, type, row, meta) {
+                           return meta.row + 1;
+                       }
+                   },
+                   { "data": "mc" },
+                   { "data": "dwmc" },
+                   { "data": "jsmds","width":"80" },
+                   {
+                       "data": "zrs", "width": "80", "render": function (data, type, row, meta) {
+                           var html = '<button type="button" class="btn btn-white btn-purple btn-sm" style="width:50px" onclick="ShowPerson(' + row.id + ')">' + data + '</button>';
+                           return html;
+                       }
+                   },
+                   {
+                       "data": "tjkssj", "render": function (data, type, row, meta) {
+                           return row.tjkssj + " ~ " + row.tjjssj;
+                       }
+                   },
+                   { "data": "cjsj" },
+                   {
+                       "data": null, "render": function (data, type, row, meta) {
+                           if (row.sfqy)
+                               return '<span class="label label-sm label-success">已启用</span>';
+                           else
+                               return '<span class="label label-sm label-danger">已停用</span>';
+                       }
+                   },
+                   {
+                       "data": "sfqy", "render": function (data, type, row, meta) {
+                           var html = '';
+                           if (data)
+                               html += '<button class="btn btn-xs btn-danger" style="margin-right:5px" onclick="Disable(' + row.id + ')">停用</button>';
+                           else
+                               html += '<button class="btn btn-xs btn-success" style="margin-right:5px" onclick="Enable(' + row.id + ')">启用</button>';
+
+                           html += '<button class="btn btn-xs btn-warning" style="margin-right:5px" onclick="AddPerson(' + row.id + ',\'' + row.dwbh + '\')">添加人员</button>';
+                           html += "<button class='btn btn-xs btn-info' style='margin-right:5px' onclick='ToEdit(" + JSON.stringify(row) + ")'>编辑</button>";
+                           html += '<button class="btn btn-xs btn-danger" onclick="Del(' + row.id + ')">删除</button>';
+                           return html;
+                       }
+                   }
+                ],
+                dom: "<'toolbar'>irtlp<'clear'>",
+                fnInitComplete: function () {
+                    $('div.toolbar').html(' <a class="btn btn-warning" onclick="ToAdd()">添加分组</a>');
+                }
+            })
+        })
+
+        function Search() {
+            table.ajax.reload();
+        }
+
+
+        $('#tjkssj,#tjjssj').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 1,
+            showMeridian: 1,
+            minuteStep: 1,
+            startDate: '@DateTime.Now.ToString("yyyy-MM-dd")'
+        });
+
+        function ToAdd() {
+            document.getElementById('form2').reset();
+            $("#id").val(0);
+            $("#dwbh").prop("disabled", false);
+            $('.chosen-select').trigger("chosen:updated")
+            $('#addGroup').modal({ show: true, backdrop: 'static' })
+        }
+        function ToEdit(row) {
+            $("#id").val(row.id);
+            $("#mc").val(row.mc);
+            $("#dwbh").val(row.dwbh);
+            $("#dwbh").prop("disabled", true)
+            $('.chosen-select').trigger("chosen:updated")
+            $("#jsmds").val(row.jsmds);
+            $("#jstc").val(row.jstc);
+            $("#tjkssj").val(moment(row.tjkssj).format("YYYY-MM-DD HH:mm"));
+            $("#tjjssj").val(moment(row.tjjssj).format("YYYY-MM-DD HH:mm"));
+           ;
+            $("#jstcmc").val("");
+            if (row.jstc != "") {
+                $.ajax({
+                    url: "@Url.Action("GetTcInfoByTcbh")",
+                    dataType: "text",
+                    type: "post",
+                    data: { tcbhs: row.jstc },
+                    async: false,
+                    success: function (res) {
+                        $("#jstcmc").val(res);
+                    }
+                })
+            }
+            $('#addGroup').modal({ show: true, backdrop: 'static' })
+            //$('.chosen-select').each(function () {
+            //    var $this = $(this);
+            //    console.log($this.parent());
+            //    $this.next().css({ 'width': $this.parent().width() });
+            //})
+        }
+
+        function Save() {
+            if ($.trim($("#mc").val()) == "") {
+                alert("请输入名称");
+                return;
+            }
+
+            if ($.trim($("#jsmds").val()) == "") {
+                alert("请输入家属免单数");
+                return;
+            }
+            if ($("#dwbh").val() == "") {
+                alert("请选择企业");
+                return;
+            }
+
+            $.ajax({
+                url: "@Url.Action("savegroup")",
+                dataType: "json",
+                type: "post",
+                data: $("#form2").serialize(),
+                success: function (res) {
+                    $('#addGroup').modal("hide");
+                    alert("保存成功");
+                    if ($("#id").val() == 0) {
+                        table.ajax.reload();
+                    } else {
+                        table.ajax.reload(null, false);
+                    }
+                }
+            })
+        }
+
+        function Enable(id) {
+            $.ajax({
+                url: "@Url.Action("changestatus")",
+                dataType: "json",
+                type: "post",
+                data: { id: id, sfqy: true },
+                success: function (res) {
+                    alert("保存成功");
+                    table.ajax.reload(null, false);
+                }
+            })
+        }
+
+        function Disable(id) {
+            $.ajax({
+                url: "@Url.Action("changestatus")",
+                dataType: "json",
+                type: "post",
+                data: { id: id, sfqy: false },
+                success: function (res) {
+                    alert("保存成功");
+                    table.ajax.reload(null, false);
+                }
+            })
+        }
+
+        function Del(id) {
+            var r = confirm("是否删除该数据");
+            if (r) {
+                $.ajax({
+                    url: "@Url.Action("del")",
+                    dataType: "json",
+                    type: "post",
+                    data: { id: id },
+                    success: function (res) {
+                        alert("删除成功");
+                        table.ajax.reload(null, false);
+                    }
+                })
+            }
+        }
+        function AddPerson(id,dwbh) {
+            $("#addPerson iframe").attr("src", "/Group/AddPersonList?fzid=" + id+"&dwbh="+dwbh)
+            $('#addPerson').modal({ show: true, backdrop: 'static' })
+        }
+        function ShowPerson(id) {
+            $("#showPerson iframe").attr("src", "/Group/PersonList?fzid=" + id)
+            $('#showPerson').modal({ show: true, backdrop: 'static' })
+        }
+
+        function ShowPakage() {
+            if ($("#dwbh").val() == "") {
+                alert("请选择企业");
+                return;
+            }
+
+            $("#showPakage iframe").attr("src", "/Group/RelationPackageList?dwbh="+$("#dwbh").val())
+            $('#showPakage').modal({ show: true, backdrop: 'static' })
+        }
+
+        if (!ace.vars['touch']) {
+            $('.chosen-select').chosen({ allow_single_deselect: true, search_contains:true });
+        }
+
+        $("#dwbh").change(function () {
+            $("#jstcmc").val("");
+            $("#jstc").val("");
+        })
+    </script>
+}

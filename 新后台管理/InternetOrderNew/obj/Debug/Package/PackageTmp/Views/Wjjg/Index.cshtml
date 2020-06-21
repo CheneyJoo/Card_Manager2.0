@@ -1,0 +1,213 @@
+﻿@{
+    List<Wjjg> lstJgxx = (List<Wjjg>) ViewBag.Jgxx;
+    string yybh = string.Empty;
+    if (lstJgxx !=null && lstJgxx.Count>0)
+    {
+        yybh = lstJgxx[0].YYBH;
+    }
+}
+@model List<Model.Wjjg>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                    <a href="">问卷管理</a>
+                    <a href="" class="on">医院列表</a>
+                </span>
+            </div>
+        </div>
+        <div class="tool_pannel layui-form">
+
+            <div class="layui-form-item ">
+                <div class="layui-form-inline">
+                    <label class="layui-form-label">医院名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" placeholder="请输入" id="schJgmc">
+                    </div>
+                </div>
+                <div class="layui-form-inline">
+                    <label class="layui-form-label">启用状态：</label>
+                    <div class="layui-input-inline"  style="width:150px">
+                        <select name="" id="idWjzt" onselect="1">
+                            <option value="-1">全部</option>
+                            <option value="1">启用</option>
+                            <option value="0">停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-inline">
+                    <button class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</button>
+                    <button class="layui-btn layui-btn-blue" onclick="add(0)">添加医院</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="table_wrap">
+            @Html.Partial("JgPart", Model)
+            <!-- 分页样式 -->
+
+        </div>
+    </div>
+
+
+    <!-- 编辑弹窗 -->
+    <div class="edit_dialog">
+        <div class="layui-form">
+            <input type="text" id="idBqid" hidden="">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>医院名称：</label>
+                <div class="layui-input-inline">
+                    <select name="" id="idYybh" lay-search="">
+                        @foreach (var item in lstJgxx)
+                        {
+                            <option value="@item.YYBH">@item.JGMC</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="buttonwrap">
+                <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnSave">保存</a>
+                <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel">取消</a>
+            </div>
+
+        </div>
+    </div>
+    
+<!-- 删除弹窗 -->
+<div class="delet_dialog">
+    <h3><img src="~/content/assets/images/warn.png" alt>您确定要删除该医院吗？</h3>
+    <div class="buttonwrap">
+        <input id="deleteId" hidden />
+        <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnDelCancel">取消</a>
+        <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnDel">删除</a>
+    </div>
+</div>
+</body>
+@section scripts {
+    <script>
+        var pageIndex = 1;
+        $(function () {
+
+            $('#btnSave').on("click", function () {
+                if ($('#idYybh').val() == null) {
+                    showmsg("请选择医院", 2, 1);
+                    return;
+                }
+                $.ajax({
+                    url: "@Url.Content("~/Wjjg/Save")",
+                    data: { YYBH: $('#idYybh').val() },
+                    type: 'post',
+                    dataType: 'json',
+                    success(data) {
+                        if (data.Code == 200) {
+                            layer.closeAll();
+                            changePostList(1);
+                            $('.edit_dialog').hide();
+                            showmsg(data.Msg, 1, 1);
+                        } else {
+                            showmsg(data.Msg, 2, 1);
+                        }
+                    }
+                });
+            });
+
+            $('#btnCancel').on("click", function () {
+                layer.closeAll();
+                $('.edit_dialog').hide();
+            });
+
+            $('#btnDelCancel').on("click", function () {
+                $('#deleteId').val('');
+                layer.closeAll();
+                $('.delet_dialog').hide();
+            });
+
+            $('#btnDel').on("click", function () {
+                $.ajax({
+                    url: "@Url.Content("~/Wjjg/Delete")",
+                    data: { id: parseInt($('#deleteId').val()) },
+                    type: 'post',
+                    dataType: 'json',
+                    success(data) {
+                        if (data.Code == 200) {
+                            layer.closeAll();
+                            changePostList(1);
+                            $('.delet_dialog').hide();
+                            showmsg(data.Msg, 1, 1);
+                        } else {
+                            showmsg(data.Msg, 2, 1);
+                        }
+                    }
+                });
+            });
+
+        });
+
+        //添加医院
+        function add(id) {
+            var strTitle = "添加医院";
+            $('#idYybh').val("@yybh");
+            layer.open({
+                type: 1,
+                title: [strTitle, 'font-weight:bold;font-size:16px'],
+                area: ['740px', '440px'],
+                content: $('.edit_dialog'),
+                cancel: function () {
+                    $('.edit_dialog').hide();
+                }
+            });
+        }
+
+        function edit(yybh) {
+            window.location.href = "@Url.Content("~/Wjtc/Index?yybh=")" + yybh;
+        }
+
+        //启用停用
+        function update(id, zt) {
+            $.ajax({
+                url: "@Url.Content("~/Wjjg/Save")",
+                data: { ID: id, WJZT: zt },
+                type: 'post',
+                dataType: 'json',
+                success(data) {
+                    if (data.Code != 200) {
+                        showmsg(data.Msg, 2, 1);
+                        return;
+                    }
+                    changePostList(pageIndex);
+                    showmsg(data.Msg, 1, 1);
+                }
+            });
+        }
+
+        //删除
+        function del(id) {
+            var i = layer.open({
+                type: 1,
+                title: '',
+                closeBtn: 0,
+                area: ['400px', '200px'],
+                content: $('.delet_dialog')
+            });
+
+            $('#deleteId').val(id);
+        }
+
+        //分页
+        function changePostList(page) {
+            pageIndex = page;
+            var jgmc = $("#schJgmc").val();
+            var wjzt = $("#idWjzt").val();
+            var url = "@Url.Content("~/Wjjg/Index?page=")" + page + "&jgmc=" + jgmc + "&wjzt=" + wjzt;
+            var id = layer.load(0, { time: false });
+            $.get(url,
+                function (data) {
+
+                    $(".table_wrap").html(data);
+                    layer.close(id);
+                });
+        }
+
+    </script>
+}

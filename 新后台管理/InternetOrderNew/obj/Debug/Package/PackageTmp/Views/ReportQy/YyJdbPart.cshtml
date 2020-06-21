@@ -1,0 +1,48 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<Model.Dto.QyyyModel>
+<table class="layui-table layui-form" lay-skin='nob'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>企业名称</th>
+            <th>排期时间</th>
+            <th>体检人数</th>
+            <th>预留名额</th>
+            <th>预约人数</th>
+            <th>到检人数</th>
+            <th>预约率</th>
+            <th>到检进度</th>
+            <th>体检状态</th>
+          
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr class="">
+            <td>@item.id</td>
+            <td>@item.dwmc</td>
+            <td>@item.ksrq.ToString("yyyy-MM-dd") - @item.jsrq.ToString("yyyy-MM-dd")</td>
+            <td><a class="text_blue" style="cursor:pointer">@item.tjrs</a></td>
+            <td>@item.ylme</td>
+            <td><a class="text_blue" style="cursor:pointer">@item.yyrs</a></td>
+            <td>@item.djrs</td>
+            <td>@item.yyl</td>
+            <td>@item.djjd</td>
+            <td>@item.tjzt</td>
+          
+
+        </tr>
+
+    }
+</table>
+@if (Model == null || Model.Count == 0)
+{
+    <div class="data_none"><img src="~/content/assets/images/nothing.png" alt=""></div>
+}
+<!-- 分页样式 -->
+@(ViewBag.Pager)
+
+

@@ -1,0 +1,186 @@
+﻿@{
+}
+@model List<Model.JsModel>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                    <a href="">系统管理</a>
+                    <a href="" class="on">角色管理</a>
+                </span>
+            </div>
+        </div>
+        <div class="tool_pannel layui-form">
+
+            <div class="layui-form-item ">
+                <div class="layui-form-inline">
+                    <label class="layui-form-label">角色名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" placeholder="请输入" id="schjsmc">
+                    </div>
+                </div>
+
+                <div class="layui-form-inline">
+                    <button class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</button>
+                    <button class="layui-btn layui-btn-blue" onclick="edit(0)">创建角色</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="table_wrap">
+            @Html.Partial("JsPart", Model)
+            <!-- 分页样式 -->
+
+        </div>
+    </div>
+
+
+    <!-- 编辑弹窗 -->
+    <div class="edit_dialog">
+        <div class="layui-form">
+            <input type="text" id="idJsid" hidden="">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>角色名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="idJsmc" class="layui-input" placeholder="请输入">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色描述：</label>
+                <div class="layui-input-inline">
+                    <textarea class="layui-textarea" id="idBz"></textarea>
+                </div>
+            </div>
+            <div class="buttonwrap">
+                <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnSave">保存</a>
+                <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel">取消</a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- 删除弹窗 -->
+    <div class="delet_dialog">
+        <h3><img src="~/content/assets/images/warn.png" alt>删除角色可能令部分账号失去相关权限</h3>
+        <p>你还要继续吗？</p>
+        <div class="buttonwrap">
+            <input id="deleteId" hidden />
+            <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnDelCancel">取消</a>
+            <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnDel">删除</a>
+        </div>
+    </div>
+
+</body>
+    @section scripts {
+        <script>
+            $(function () {
+                $('#btnSave').on("click", function () {
+                    $.ajax({
+                        url: '@Url.Content("~/js/Save")',
+                        data: { id: parseInt($('#idJsid').val()), Jsmc: $('#idJsmc').val(), Bz: $('#idBz').val() },
+                        type: 'post',
+                        dataType: 'json',
+                        success(data) {
+                            if (data.Code == 200) {
+                                layer.closeAll();
+                                changePostList(1);
+                                $('.edit_dialog').hide();
+                                showmsg(data.Msg, 1, 1);
+                            } else {
+                                showmsg(data.Msg, 2, 1);
+                            }
+                        }
+                    });
+                });
+
+                $('#btnCancel').on("click", function () {
+                    layer.closeAll();
+                    $('.edit_dialog').hide();
+                });
+
+                $('#btnDelCancel').on("click", function () {
+                    $('#deleteId').val('');
+                    layer.closeAll();
+                    $('.delet_dialog').hide();
+                });
+
+                $('#btnDel').on("click", function () {
+                    $.ajax({
+                        url: '@Url.Content("~/Js/Delete")',
+                        data: { id: parseInt($('#deleteId').val()) },
+                        type: 'post',
+                        dataType: 'json',
+                        success(data) {
+                            if (data.Code == 200) {
+                                layer.closeAll();
+                                changePostList(1);
+                                $('.delet_dialog').hide();
+                                showmsg(data.Msg, 1, 1);
+                            } else {
+                                showmsg(data.Msg, 2, 1);
+                            }
+                        }
+                    });
+                });
+
+            });
+
+            //编辑操作
+            function edit(id) {
+                var strTitle = id == 0 ? "添加角色" : "编辑角色";
+                $.ajax({
+                    url: '@Url.Content("~/Js/AddOrEdit")',
+                    data: { id: id },
+                    type: 'post',
+                    dataType: 'json',
+                    success(data) {
+                        if (data.Code != 200) {
+                            showmsg(data.Msg, 2, 1);
+                            return;
+                        }
+                        $('#idJsid').val(data.Result.Id);
+                        $('#idJsmc').val(data.Result.Jsmc);
+                        $('#idBz').val(data.Result.Bz);
+                        layer.open({
+                            type: 1,
+                            title: [strTitle, 'font-weight:bold;font-size:16px'],
+                            area: ['540px', '340px'],
+                            content: $('.edit_dialog'),
+                            cancel: function () {
+                                $('.edit_dialog').hide();
+                            }
+                        });
+                    }
+                });
+            }
+
+            //删除
+            function del(id) {
+                var i = layer.open({
+                    type: 1,
+                    title: '',
+                    closeBtn: 0,
+                    area: ['400px', '200px'],
+                    content: $('.delet_dialog')
+                });
+
+                $('#deleteId').val(id);
+            }
+
+            //分页
+            function changePostList(page) {
+                var jsmc = $("#schjsmc").val();
+                var url = '@Url.Content("~/Js/Index")'+"?page=" + page + "&jsmc=" + jsmc;
+                var id = layer.load(0, { time: false });
+                $.get(url,
+                    function (data) {
+
+                        $(".table_wrap").html(data);
+                        layer.close(id);
+                    });
+            }
+
+        </script>
+    }

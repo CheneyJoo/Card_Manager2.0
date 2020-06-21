@@ -1,0 +1,63 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<Model.XtMenuModel>
+
+@*<table class="layui-table layui-form" lay-skin='nob'>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>角色名称</th>
+        <th>描述</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        var lstFstMenu = Model.Where(x => x.scid.Equals(0)).ToList();
+
+        foreach (var item in lstFstMenu)
+        {
+            var lstSecMenu = Model.Where(x => x.scid.Equals(item.Id)).ToList();
+
+        }
+    }
+</table>*@
+
+    <table class="layui-table layui-form table_qx" lay-filter="menuForm" >
+        <thead>
+        <tr>
+            <th>一级菜单</th>
+            <th>二级菜单</th>
+        </tr>
+        </thead>
+        <tbody id="menuBody">
+    @if (Model != null && Model.Count > 0)
+    {
+        var lstFstMenu = Model.Where(x => x.scid.Equals(0)).ToList();
+
+        foreach (var first in lstFstMenu)
+        {
+            var lstSecMenu = Model.Where(x => x.scid.Equals(first.Id)).ToList();
+            <tr>
+                <td><input type="checkbox" name="" title="@first.mc" scid="@first.scid" oid="@first.Id" lay-skin="primary" lay-filter="firstChk"></td>
+                <td>
+                    @for (int i = 0; i < lstSecMenu.Count; i++)
+                    {
+                        <input type="checkbox" name="" title="@lstSecMenu[i].mc" scid="@lstSecMenu[i].scid" oid="@lstSecMenu[i].Id" lay-skin="primary" lay-filter="secChk">
+                    }
+                </td>
+
+            </tr>
+        }
+    }
+                </tbody>
+    </table>
+<div class="buttonwrap">
+    <input id="idJsid" hidden>
+    <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel">取消</a>
+    <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnSave">保存</a>
+</div>
+

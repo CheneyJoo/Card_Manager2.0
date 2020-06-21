@@ -1,0 +1,345 @@
+﻿@{
+    List<Model.Wjbq> listBq = (List<Model.Wjbq>) ViewBag.ListBq;
+}
+@model List<Model.Wjgz>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                    <a href="">问卷管理</a>
+                    <a href="" class="on">疾病规则</a>
+                </span>
+            </div>
+        </div>
+        <div class="tool_pannel layui-form">
+
+            <div class="layui-form-item ">
+                <div class="layui-form-inline">
+                    <label class="layui-form-label">标签名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" placeholder="请输入" id="schGzmc">
+                    </div>
+                </div>
+
+                <div class="layui-form-inline">
+                    <button class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</button>
+                    <button class="layui-btn layui-btn-blue" onclick="edit(0)">添加</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="table_wrap">
+            @Html.Partial("GzPart", Model)
+            <!-- 分页样式 -->
+
+        </div>
+    </div>
+
+
+    <!-- 编辑弹窗 -->
+    <div class="edit_dialog" id="idWinEdit">
+        <div class="layui-form">
+            <input type="text" id="idGzid" hidden="">
+            <input type="text" id="idBqids" hidden="">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>规则名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="idGzmc" class="layui-input" placeholder="请输入">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>性别：</label>
+                <div class="layui-input-inline">
+                    <select id="idXb">
+                        <option value="1" selected="selected">男</option>
+                        <option value="2">女</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" id="idSynl">
+                <div class="layui-inline">
+                    <label class="layui-form-label">适用年龄：</label>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <input type="text" id="idZxsynl" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <input type="text" id="idZdsynl" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择标签</label>
+                <div class="layui-input-inline">
+                    <textarea class="layui-textarea" id="idBqmcs" readonly="readonly"></textarea>
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="btnSelectLbl">选择标签</button>
+                </div>
+            </div>
+            <div class="buttonwrap">
+                <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnSave">保存</a>
+                <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel">取消</a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- 删除弹窗 -->
+    <div class="delet_dialog">
+        <h3><img src="~/content/assets/images/warn.png" alt>您确定要删除该规则吗？</h3>
+        <div class="buttonwrap">
+            <input id="deleteId" hidden />
+            <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnDelCancel">取消</a>
+            <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnDel">删除</a>
+        </div>
+    </div>
+
+<div class="edit_dialog" id="idWinSelect">
+    <div class="layui-form">
+        @Html.Partial("BqPart", listBq)
+    </div>
+    
+</div>
+</body>
+@section scripts {
+    <script>
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('checkbox(chkAll)', function (data) {
+
+                $('#idListBody').find(':checkbox').each(function () {
+                    this.checked = data.elem.checked;
+                    if (data.elem.checked) {
+
+                    }
+                });
+
+                form.render('checkbox');
+            });
+
+            form.on('checkbox(chkSingle)', function (data) {
+                var list = $('#idListBody input');
+                var checkCount = 0;
+                list.each(function () {
+                    if (this.checked) {
+                        checkCount += 1;
+                    }
+                });
+                if (checkCount == list.length) {
+                    $('#idChkAll')[0].checked = true;
+                } else {
+                    $('#idChkAll')[0].checked = false;
+                }
+                form.render('checkbox');
+            });
+        });
+
+        $(function () {
+            //年龄判断输入数字
+            $("#idZxsynl").keydown(function () {
+                var v = window.event.keyCode;
+                if (!(v >= 48 && v <= 57) && !(v >= 96 && v <= 105)) {
+                    window.event.keyCode = 0;
+                    window.event.returnValue = false;
+                }
+            });
+
+            $("#idZdsynl").keydown(function () {
+                var v = window.event.keyCode;
+                if (!(v >= 48 && v <= 57) && !(v >= 96 && v <= 105)) {
+                    window.event.keyCode = 0;
+                    window.event.returnValue = false;
+                }
+            });
+
+
+            $('#idBqxz option').on("click",function() {
+                alert(1);
+            })
+            $('#btnSave').on("click", function () {
+
+                $.ajax({
+                    url: "@Url.Content("~/Wjgz/Save")",
+                    data: { ID: parseInt($('#idGzid').val()), GZMC: $('#idGzmc').val(), ZDNL: parseInt($('#idZdsynl').val()), ZXNL: parseInt($('#idZxsynl').val()), XZBQ: $('#idBqids').val(), XB: parseInt($('#idXb').val()) },
+                    type: 'post',
+                    dataType: 'json',
+                    success(data) {
+                        if (data.Code == 200) {
+                            layer.closeAll();
+                            changePostList(1);
+                            $('#idWinEdit').hide();
+                            showmsg(data.Msg, 1, 1);
+                        } else {
+                            showmsg(data.Msg, 2, 1);
+                        }
+                    }
+                });
+            });
+
+            $('#btnCancel').on("click", function () {
+                layer.closeAll();
+                $('#idWinEdit').hide();
+            });
+
+            $('#btnDelCancel').on("click", function () {
+                $('#deleteId').val('');
+                layer.closeAll();
+                $('.delet_dialog').hide();
+            });
+
+            $('#btnDel').on("click", function () {
+                $.ajax({
+                    url: "@Url.Content("~/Wjgz/Delete")",
+                    data: { id: parseInt($('#deleteId').val()) },
+                    type: 'post',
+                    dataType: 'json',
+                    success(data) {
+                        if (data.Code == 200) {
+                            layer.closeAll();
+                            changePostList(1);
+                            $('.delet_dialog').hide();
+                            showmsg(data.Msg, 1, 1);
+                        } else {
+                            showmsg(data.Msg, 2, 1);
+                        }
+                    }
+                });
+            });
+
+            $('#btnSelectLbl').on("click", function () {
+                layer.open({
+                    type: 1,
+                    title: ["选择标签", 'font-weight:bold;font-size:16px'],
+                    area: ['540px', '600px'],
+                    content: $('#idWinSelect'),
+                    btn: ['保存', '取消'],
+                    btn1: function (index, layero) {
+                        var arrId = [];
+                        var arrName = [];
+                        $('#idListBody').find(':checkbox').each(function () {
+                            if (this.checked) {
+                                arrName.push(this.getAttribute("bqmc"));
+                                arrId.push(this.getAttribute("bqid"));
+                            }
+                        });
+                        $('#idBqmcs').val(arrName.join(","));
+                        $('#idBqids').val(arrId.join(","));
+                        $('#idWinSelect').hide();
+                        layer.close(index);
+                    },
+                    btn2: function (index, layero) {
+                        $('#idWinSelect').hide();
+                        layer.close(index);
+                    },
+                    cancel: function () {
+                        $('#idWinSelect').hide();
+                    }
+                });
+            });
+
+            $('#btnSelSave').on("click", function () {
+
+            });
+
+            $('#btnSelCancel').on("click", function () {
+                //$('#idWinSelect').hide();
+
+            });
+        });
+
+        //编辑操作
+        function edit(id) {
+            var strTitle = id == 0 ? "添加规则" : "编辑规则";
+            layui.use('form', function () {
+                var form = layui.form;
+                $('#idListBody input').each(function (i, v) {
+                    this.checked = false;
+                });
+                form.render('checkbox');
+            });
+            $('#idBqmcs').val('');
+            $('#idChkAll')[0].checked = false;
+            $.ajax({
+                url: "@Url.Content("~/Wjgz/AddOrEdit")",
+                data: { id: id },
+                type: 'post',
+                dataType: 'json',
+                success(data) {
+                    if (data.Code != 200) {
+                        showmsg(data.Msg, 2, 1);
+                        return;
+                    }
+                    $('#idGzid').val(data.Result.ID);
+                    $('#idGzmc').val(data.Result.GZMC);
+                    $('#idZdsynl').val(data.Result.ZDNL);
+                    $('#idZxsynl').val(data.Result.ZXNL);
+                    $('#idBqids').val(data.Result.XZBQ);
+                    $('#idXb').val(data.Result.XB == 0 ? 1 : data.Result.XB);
+                    layui.use('form', function () {
+                        var form = layui.form;
+                        form.render('select');
+
+                    });
+                    if (data.Result.ListMx != null) {
+                        layui.use('form', function () {
+                            var form = layui.form;
+                            var count = data.Result.ListMx.length;
+                            var arrName = [];
+                            $.each(data.Result.ListMx, function (i, v) {
+                                $('#idListBody input[bqid="' + v.BQID + '"]')[0].checked = true;
+                                arrName.push(v.BQMC);
+                            });
+                            if (count == $('#idListBody tr').length && count>0) {
+                                $('#idChkAll')[0].checked = true;
+                            }
+                            $('#idBqmcs').val(arrName.join(","));
+                            form.render('checkbox');
+                            
+                        });
+                    }
+
+
+                    layer.open({
+                        type: 1,
+                        title: [strTitle, 'font-weight:bold;font-size:16px'],
+                        area: ['540px', '600px'],
+                        content: $('#idWinEdit'),
+                        cancel: function () {
+                            $('#idWinEdit').hide();
+                        }
+                    });
+                }
+            });
+        }
+
+        //删除
+        function del(id) {
+            var i = layer.open({
+                type: 1,
+                title: '',
+                closeBtn: 0,
+                area: ['400px', '200px'],
+                content: $('.delet_dialog')
+            });
+
+            $('#deleteId').val(id);
+        }
+
+        //分页
+        function changePostList(page) {
+            var gzmc = $("#schGzmc").val();
+            var url = "@Url.Content("~/Wjgz/Index?page")" + page + "&gzmc=" + gzmc;
+            var id = layer.load(0, { time: false });
+            $.get(url,
+                function (data) {
+
+                    $(".table_wrap").html(data);
+                    layer.close(id);
+                });
+        }
+
+    </script>
+}

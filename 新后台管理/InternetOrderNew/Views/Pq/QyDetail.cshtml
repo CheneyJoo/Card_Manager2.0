@@ -1,0 +1,620 @@
+﻿
+@{
+    ViewBag.Title = "QyDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Model.PqQyszModel jbsz = ViewBag.jbsz;
+    Model.PqPlszjlModel plszjl = ViewBag.plszjl;
+    Model.QyJbxxModel qy = ViewBag.qy;
+}
+
+@section head{
+    @*<link href="~/Content/css/scheduling.css" rel="stylesheet" />*@
+    <link href="~/Content/css/jquery.cxcalendar.css" rel="stylesheet" />
+    <link href="~/Content/css/queryAppointment.css" rel="stylesheet" />
+    <link href="~/Content/css/qydetail.css" rel="stylesheet" />
+    <style>
+    </style>
+}
+
+<div class="main-content">
+    <div class="page-content">
+        <form id="form1">
+            <div class="row">
+                <input type="hidden" id="qybh" name="qybh" value="@jbsz.qybh" />
+                <div class="col-xs-12">
+                    <div class="widget-box">
+                        <div class="widget-header widget-header-flat">
+                            <h4 class="widget-title">@(qy.mc)-排期设置</h4>
+                        </div>
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div>
+                                            <b>预约设置：</b>需提前<input maxlength="2" id="tqts" name="tqts" onkeyup="this.value = this.value.replace(/\D|[0-9]{3,}/g, '')" value="@jbsz.tqts" />天预约，且在<input type="text" id="txtTimeBefor" name="txtTimeBefor" onfocus="WdatePicker({ dateFmt:'HH:mm' , minDate:'00:00' , quickSel: ['%H-00', '%H-15' , '%H-30' , '%H-45' ] })" class="Wdate" value="@jbsz.jzsj" />点之前预约
+                                        </div>
+                                        <br />
+                                        <div>
+                                            <div class="checkbox">
+                                                <b>休息日设置：</b>
+                                                <label>
+                                                    <input name="xxr" type="checkbox" @(jbsz.xxr.Contains('0') ? "checked" : "") value="0" class="ace">
+                                                    <span class="lbl"> 周日</span>
+                                                </label>
+                                                <label>
+                                                    <input name="xxr" type="checkbox" @(jbsz.xxr.Contains('1') ? "checked" : "") value="1" class="ace">
+                                                    <span class="lbl">周一</span>
+                                                </label>
+                                                <label>
+                                                    <input name="xxr" type="checkbox" @(jbsz.xxr.Contains('2') ? "checked" : "") value="2" class="ace">
+                                                    <span class="lbl">周二</span>
+                                                </label>
+                                                <label>
+                                                    <input name="xxr" type="checkbox" @(jbsz.xxr.Contains('3') ? "checked" : "") value="3" class="ace">
+                                                    <span class="lbl">周三</span>
+                                                </label>
+                                                <label>
+                                                    <input name="xxr" type="checkbox" @(jbsz.xxr.Contains('4') ? "checked" : "") value="4" class="ace">
+                                                    <span class="lbl">周四</span>
+                                                </label>
+                                                <label>
+                                                    <input name="xxr" type="checkbox" @(jbsz.xxr.Contains('5') ? "checked" : "") value="5" class="ace">
+                                                    <span class="lbl">周五</span>
+                                                </label>
+                                                <label>
+                                                    <input name="xxr" type="checkbox" @(jbsz.xxr.Contains('6') ? "checked" : "") value="6" class="ace">
+                                                    <span class="lbl">周六</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div id="timeObj" style="height:40px;line-height:40px;">
+                                            <span><b>日期范围：</b></span>
+                                            <input type="text" id="txtStartDate" name="txtStartDate" onfocus="WdatePicker({ dateFmt:'yyyy/MM/dd'})" class="Wdate" value="@plszjl.kssj.ToString("yyyy/MM/dd")" />
+                                            ~<input type="text" id="txtEndDate" name="txtEndDate" onfocus="WdatePicker({ dateFmt:'yyyy/MM/dd' , minDate:'#F{$dp.$D(\'txtStartDate\')}'})" class="Wdate" value="@plszjl.jssj.ToString("yyyy/MM/dd")" />
+                                        </div>
+                                        <table class="table1" style="min-width:512px">
+                                            <thead align="center">
+                                                <tr>
+                                                    <th>时间段</th>
+                                                    <th>每天预留名额</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody align="center" id="tbodydate">
+
+                                                @for (int i = 0; i < plszjl.mxList.Count; i++)
+                                                {
+                                                    var item = plszjl.mxList[i];
+                                                    <tr class="text-c">
+                                                        <td>
+                                                            <input type="text" id="kssj@(i)" name="kssj" value="@item.kssj" onfocus="funDateFocus(this)" class="Wdate">~
+                                                            <input type="text" id="jssj@(i)" name="jssj" value="@item.jssj" onfocus="funDateFocus(this)" class="Wdate">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="input_on" name="tjrs" value="@item.tjrs" onkeyup="this.value = this.value.replace(/\D|[0-9]{6,}/g, '') ">
+                                                        </td>
+                                                        <td>
+                                                            <span class="del_color">删除</span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                        <div style="text-align:left;">
+                                            <span style="display: block; background: url(/Content/img/scheduling/add.png) no-repeat left center; height: 40px; line-height: 40px; text-indent: 30px;cursor:pointer;width:200px" onclick="funAddRow(this)">点击添加需要预留的时间段</span>
+                                        </div>
+                                        <div style="width:512px;text-align:center;margin-top:20px">
+                                            <a class="btn btn-sm btn-primary" onclick="Submit()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;确定&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div style="margin:10px auto;">
+                                            <table width="620px" border="0" cellpadding="0" cellspacing="0" class="datetable">
+                                                <thead>
+                                                    <tr>
+                                                        <td colspan=7 style="border: 1px solid #ccc !important;">
+                                                            <span><b id="SY" name="SY">2019</b>年<b id="SM" name="SM">7</b>月</span>
+
+                                                            <div class="arrowFlip">
+                                                                <a href="javascript:void(0)" class="left_arrow"></a>
+                                                                <a href="javascript:void(0)" class="right_arrow"></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="">
+                                                        <td width="54" style="background-color:#ccc;">日</td>
+                                                        <td width="54" style="background-color:#ccc;">一</td>
+                                                        <td width="54" style="background-color:#ccc;">二</td>
+                                                        <td width="54" style="background-color:#ccc;">三</td>
+                                                        <td width="54" style="background-color:#ccc;">四</td>
+                                                        <td width="54" style="background-color:#ccc;">五</td>
+                                                        <td width="54" style="background-color:#ccc;">六</td>
+                                                    </tr>
+                                                    @{ var gNum = 0;}
+                                                    @for (int i = 0; i < 6; i++)
+                                                    {
+                                                        <tr align="center">
+                                                            @for (int j = 0; j < 7; j++)
+                                                            {
+                                                                gNum = i * 7 + j;
+                                                                <td id="GD@(gNum)">
+                                                                    <font id="SD@(gNum)"></font>
+                                                                    <br />
+                                                                    <span id="LD@(gNum)"></span>
+                                                                    <div id="btn@(gNum)" class="datetable_xuanze">
+                                                                        <div class="top_div">更改设置</div>
+                                                                        <div class="bot_div">设置休息</div>
+                                                                        <div class="div_setfull">设置约满</div>
+                                                                    </div>
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="pqsj" class="modal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top:5%; width:500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id="title" class="blue bigger">时间段设置</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form2">
+                    <input type="hidden" name="qybh" value="@jbsz.qybh" />
+                    <div>
+                        <b>体检日期：</b>
+                        <input type="text" id="tjrq" name="tjrq" onfocus="WdatePicker({ dateFmt: 'yyyy/MM/dd' })" style="width: 120px; height: 30px; margin-left: 30px; text-indent: 10px; " class="Wdate" />
+                    </div>
+                    <div>
+                        <table class="table1" cellspacing="0px">
+                            <thead align="center">
+                                <tr style="background:#dedede">
+                                    <th>时间段</th>
+                                    <th>每天预留名额</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody align="center"></tbody>
+                        </table>
+                        <div>
+                            <span style="display: block; background: url(/Content/img/scheduling/add.png) no-repeat left center; height: 40px; line-height: 40px; text-indent: 30px;cursor:pointer" onclick="funAddRow(this)">点击添加需要预留的时间段</span>
+                        </div>
+                        <div style="width:100%;text-align:center">
+                            <a class="btn btn-sm btn-primary" onclick="Submit1()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;确定&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/Content/js/Scheduling.js"></script>
+    <script src="~/Content/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/Content/js/timeformat.js"></script>
+    <script src="~/Content/js/json.js"></script>
+    <script>
+        $(function () {
+            GetSchedule();
+            //drawCld(2019, 7 - 1, {});
+        })
+
+
+        function GetSchedule() {
+            $(".datetable_xuanze").hide();
+            $.ajax({
+                url: "@Url.Action("GetSchedule")",
+                data: { year: year, month: month, qybh: $("#qybh").val() },
+                dataType: "json",
+                type: "post",
+                success: function (res) {
+                    drawCld(year, month - 1, res);
+                }
+            })
+        }
+
+
+        function funDateFocus(e) {
+            var index = ($(e).index());
+            if (index == 0) { //开始时间
+                WdatePicker({ dateFmt: 'HH:mm', minDate: '06:00', quickSel: ['%H-00', '%H-15', '%H-30', '%H-45'] });
+            }
+            else if (index == 1) {//结束时间
+                var kssjId = $(e).prev().attr("id");
+                WdatePicker({ dateFmt: 'HH:mm', minDate: '#F{$dp.$D(\'' + kssjId + '\')}', quickSel: ['%H-00', '%H-15', '%H-30', '%H-45'] });
+            }
+        }
+
+        $(document).on("click", ".del_color", function () {
+            if ($(this).parents("tbody").find("tr").length > 1) {
+                $(this).parent().parent().remove();
+            }
+        })
+
+        var num = 999;
+        function funAddRow(e) {
+            num++;
+            var html = "";
+            html += '<tr class="text-c">';
+            html += '<td>';
+            html += '<input type="text" id="kssj' + num + '" name="kssj" value="" onfocus="funDateFocus(this)" class="Wdate">~';
+            html += '<input type="text" id="jssj' + num + '" name="jssj" value="" onfocus="funDateFocus(this)" class="Wdate">';
+            html += '</td>';
+            html += '<td>';
+            html += '<input type="text" value="" name="tjrs" class="input_on" onkeyup="this.value = this.value.replace(/\\D|[0-9]{6,}/g, \'\') " />';
+            html += '</td>';
+            html += '<td>';
+            html += '<span class="del_color">删除</span>';
+            html += '</td>';
+            html += '</tr>';
+            $(e).parent().prev("table").find("tbody").append(html);
+        }
+        function Submit() {
+            $.ajax({
+                url: "@Url.Action("BatchSave")",
+                data: $("#form1").serialize(),
+                type: "post",
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 200) {
+                        GetSchedule();
+                        alert("保存成功");
+                    } else {
+                        alert(res.msg);
+                    }
+              
+                }
+            })
+        }
+
+        $(".left_arrow").click(function () {
+            $(".datetable_xuanze").hide();
+            var newmonth = parseInt(month) - 1;
+            if (newmonth == 0) {
+                newmonth = 12;
+                year = parseInt(year) - 1;
+            }
+
+            month = newmonth;
+            $("#SY").html(year.toString());
+            $("#SM").html(month.toString());
+
+            GetSchedule();
+        });
+        $(".right_arrow").click(function () {
+            $(".datetable_xuanze").hide();
+            var newmonth = parseInt(month) + 1;
+            if (newmonth > 12) {
+                newmonth = newmonth - 12;
+                year = parseInt(year) + 1;
+            }
+            month = newmonth;
+
+            $("#SY").html(year.toString());
+            $("#SM").html(month.toString());
+
+            GetSchedule();
+        });
+
+        $(".datetable tbody td").click(function (e) {
+            $(".datetable_xuanze").hide();
+            if ($(this).hasClass("tdhv")) {
+                $(this).find(".datetable_xuanze").show();
+            }
+        });
+
+        $(".bot_div,.div_setfull").click(function () {
+            var flag = $(this).parent().parent().attr("flag");
+            var newFlag = flag;
+            if ($(this).hasClass("bot_div")) {
+                newFlag = flag == 1 ? 0 : 1;
+            } else if ($(this).hasClass("div_setfull")) {
+                newFlag = flag == 2 ? 0 : 2;
+            }
+            var day = $(this).parent().parent().find("font").text();
+            var rq = year + "-" + month + "-" + day;
+            $.ajax({
+                url: "@Url.Action("ChangeFlag")",
+                data: { qybh: $("#qybh").val(), rq: rq, flag: newFlag },
+                type: "post",
+                dataType: "json",
+                success: function (res) {
+                    GetSchedule();
+                }
+            })
+        })
+
+        $(".top_div").click(function () {
+            //$(".datetable_xuanze").hide();
+            var day = $(this).parent().parent().find("font").text();
+            var rq = year + "/" + Checknumber(month) + "/" + Checknumber(day);//获取选中日期
+            $("#tjrq").val(rq);//日期框赋值
+            $("#pqsj .table1 tbody").html("");//清空时间段
+            //初始化时间段
+            $.ajax({
+                url: "@Url.Action("GetDetail")",
+                data: { qybh: $("#qybh").val(), rq: rq },
+                type: "post",
+                dataType: "json",
+                success: function (res) {
+                    var html = "";
+                    $.each(res, function (i, item) {
+                        num++;
+                        html += '<tr class="text-c">';
+                        html += '<td>';
+                        html += '<input type="text" id="kssj' + num + '" name="kssj" value="' + item.kssj + '" onfocus="funDateFocus(this)" class="Wdate">~';
+                        html += '<input type="text" id="jssj' + num + '" name="jssj" value="' + item.jssj + '" onfocus="funDateFocus(this)" class="Wdate">';
+                        html += '</td>';
+                        html += '<td>';
+                        html += '<input type="text"  name="tjrs" value="' + item.tjrs + '" class="input_on" onkeyup="this.value = this.value.replace(/\\D|[0-9]{6,}/g, \'\') " />';
+                        html += '</td>';
+                        html += '<td>';
+                        html += '<span class="del_color">删除</span>';
+                        html += '</td>';
+                        html += '</tr>';
+                    })
+                    $("#pqsj .table1 tbody").html(html);
+                }
+            })
+
+            $('#pqsj').modal({ show: true, backdrop: 'static' });
+        })
+        function Submit1() {
+            $.ajax({
+                url: "@Url.Action("Save")",
+                data: $("#form2").serialize(),
+                type: "post",
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 200) {
+                        GetSchedule();
+                        $('#pqsj').modal("hide");
+                    } else {
+                        alert(res.msg)
+                    }
+                }
+            })
+        }
+
+    </script>
+    <script>
+        var lunarInfo = new Array(
+       0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
+       0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0, 0x14977,
+       0x04970, 0x0a4b0, 0x0b4b5, 0x06a50, 0x06d40, 0x1ab54, 0x02b60, 0x09570, 0x052f2, 0x04970,
+       0x06566, 0x0d4a0, 0x0ea50, 0x06e95, 0x05ad0, 0x02b60, 0x186e3, 0x092e0, 0x1c8d7, 0x0c950,
+       0x0d4a0, 0x1d8a6, 0x0b550, 0x056a0, 0x1a5b4, 0x025d0, 0x092d0, 0x0d2b2, 0x0a950, 0x0b557,
+       0x06ca0, 0x0b550, 0x15355, 0x04da0, 0x0a5d0, 0x14573, 0x052d0, 0x0a9a8, 0x0e950, 0x06aa0,
+       0x0aea6, 0x0ab50, 0x04b60, 0x0aae4, 0x0a570, 0x05260, 0x0f263, 0x0d950, 0x05b57, 0x056a0,
+       0x096d0, 0x04dd5, 0x04ad0, 0x0a4d0, 0x0d4d4, 0x0d250, 0x0d558, 0x0b540, 0x0b5a0, 0x195a6,
+       0x095b0, 0x049b0, 0x0a974, 0x0a4b0, 0x0b27a, 0x06a50, 0x06d40, 0x0af46, 0x0ab60, 0x09570,
+       0x04af5, 0x04970, 0x064b0, 0x074a3, 0x0ea50, 0x06b58, 0x055c0, 0x0ab60, 0x096d5, 0x092e0,
+       0x0c960, 0x0d954, 0x0d4a0, 0x0da50, 0x07552, 0x056a0, 0x0abb7, 0x025d0, 0x092d0, 0x0cab5,
+       0x0a950, 0x0b4a0, 0x0baa4, 0x0ad50, 0x055d9, 0x04ba0, 0x0a5b0, 0x15176, 0x052b0, 0x0a930,
+       0x07954, 0x06aa0, 0x0ad50, 0x05b52, 0x04b60, 0x0a6e6, 0x0a4e0, 0x0d260, 0x0ea65, 0x0d530,
+       0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0, 0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520, 0x0dd45,
+       0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0
+   )
+
+        var solarMonth = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+        var nStr1 = new Array('日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十');
+
+
+
+        //返回农历y年的总天数
+        function lYearDays(y) {
+            var i, sum = 348;
+            for (i = 0x8000; i > 0x8; i >>= 1) sum += (lunarInfo[y - 1900] & i) ? 1 : 0;
+            return (sum + leapDays(y));
+        }
+        //返回农历y年闰月的天数
+        function leapDays(y) {
+            if (leapMonth(y)) return ((lunarInfo[y - 1900] & 0x10000) ? 30 : 29);
+            else return (0);
+        }
+        //判断y年的农历中那个月是闰月,不是闰月返回0
+        function leapMonth(y) {
+            return (lunarInfo[y - 1900] & 0xf);
+        }
+        //返回农历y年m月的总天数
+        function monthDays(y, m) {
+            return ((lunarInfo[y - 1900] & (0x10000 >> m)) ? 30 : 29);
+        }
+        //算出当前月第一天的农历日期和当前农历日期下一个月农历的第一天日期
+        function Dianaday(objDate) {
+
+            var i, leap = 0, temp = 0;
+            var baseDate = new Date(1900, 0, 31);
+            var offset = (objDate - baseDate) / 86400000;
+            this.dayCyl = offset + 40;
+            this.monCyl = 14;
+            for (i = 1900; i < 2050 && offset > 0; i++) {
+                temp = lYearDays(i)
+                offset -= temp;
+                this.monCyl += 12;
+            }
+            if (offset < 0) {
+                offset += temp;
+                i--;
+                this.monCyl -= 12;
+            }
+            this.year = i;
+            this.yearCyl = i - 1864;
+            leap = leapMonth(i); //闰哪个月
+            this.isLeap = false;
+            for (i = 1; i < 13 && offset > 0; i++) {
+                if (leap > 0 && i == (leap + 1) && this.isLeap == false) {	//闰月
+                    --i; this.isLeap = true; temp = leapDays(this.year);
+                }
+                else {
+                    temp = monthDays(this.year, i);
+                }
+                if (this.isLeap == true && i == (leap + 1)) this.isLeap = false;	//解除闰月
+                offset -= temp;
+                if (this.isLeap == false) this.monCyl++;
+            }
+            if (offset == 0 && leap > 0 && i == leap + 1)
+                if (this.isLeap) { this.isLeap = false; }
+                else { this.isLeap = true; --i; --this.monCyl; }
+            if (offset < 0) { offset += temp; --i; --this.monCyl; }
+            this.month = i;
+            this.day = offset + 1;
+        }
+        //返回公历y年m+1月的天数
+        function solarDays(y, m) {
+            if (m == 1)
+                return (((y % 4 == 0) && (y % 100 != 0) || (y % 400 == 0)) ? 29 : 28);
+            else
+                return (solarMonth[m]);
+        }
+        //记录公历和农历某天的日期
+        function calElement(sYear, sMonth, sDay, week, lYear, lMonth, lDay, isLeap) {
+            this.isToday = false;
+            //公历
+            this.sYear = sYear;
+            this.sMonth = sMonth;
+            this.sDay = sDay;
+            this.week = week;
+            //农历
+            this.lYear = lYear;
+            this.lMonth = lMonth;
+            this.lDay = lDay;
+            this.isLeap = isLeap;
+            //节日记录
+            this.lunarFestival = ''; //农历节日
+            this.solarFestival = ''; //公历节日
+            this.solarTerms = ''; //节气
+        }
+
+        //保存y年m+1月的相关信息
+        var fat = mat = 9;
+        var eve = 0;
+        function calendar(y, m) {
+
+            fat = mat = 0;
+            var sDObj, lDObj, lY, lM, lD = 1, lL, lX = 0, tmp1, tmp2;
+            var lDPOS = new Array(3);
+            var n = 0;
+            var firstLM = 0;
+            sDObj = new Date(y, m, 1);	//当月第一天的日期
+            this.length = solarDays(y, m);    //公历当月天数
+            this.firstWeek = sDObj.getDay();    //公历当月1日星期几
+            if ((m + 1) == 5) { fat = sDObj.getDay() }
+            if ((m + 1) == 6) { mat = sDObj.getDay() }
+            for (var i = 0; i < this.length; i++) {
+                if (lD > lX) {
+                    sDObj = new Date(y, m, i + 1);    //当月第一天的日期
+                    lDObj = new Dianaday(sDObj);     //农历
+                    lY = lDObj.year;           //农历年
+                    lM = lDObj.month;          //农历月
+                    lD = lDObj.day;            //农历日
+                    lL = lDObj.isLeap;         //农历是否闰月
+                    lX = lL ? leapDays(lY) : monthDays(lY, lM); //农历当月最後一天
+                    if (lM == 12) { eve = lX }
+                    if (n == 0) firstLM = lM;
+                    lDPOS[n++] = i - lD + 1;
+                }
+                this[i] = new calElement(y, m + 1, i + 1, nStr1[(i + this.firstWeek) % 7], lY, lM, lD++, lL);
+                if ((i + this.firstWeek) % 7 == 0) {
+                    this[i].color = '#ccc';  //周日颜色
+                }
+            }
+
+            //if (y == tY && m == tM) this[tD - 1].isToday = true;	//今日
+        }
+
+        var cld;
+
+        var Checknumber = function (startmonth) {
+            if (new Number(startmonth).toString().length == 1) {
+                startmonth = "0" + startmonth;
+            }
+            return startmonth;
+        }
+        var restTotalList = null;//每天剩余预约量,(50/100)
+
+        var year = '@DateTime.Now.Year', month = '@DateTime.Now.Month', today = new Date('@DateTime.Now.ToString("yyyy-MM-dd")');
+        function drawCld(SY, SM, DtList) {
+
+            var TF = true;
+            var p1 = p2 = "";
+            var i, sD, s, size;
+            cld = new calendar(SY, SM);
+
+
+            for (i = 0; i < 42; i++) {
+                tobj = eval('GD' + i);
+                sObj = eval('SD' + i);
+                lObj = eval('LD' + i);
+                sObj.className = '';
+                sD = i - cld.firstWeek;
+
+                if (sD > -1 && sD < cld.length) { //日期内
+
+                    var cldday = sD + 1;
+
+                    val = (year + "-" + Checknumber(month) + "-" + Checknumber(cldday));
+                    var cksa = new Date(Date.parse(val));
+
+                    if (cksa >= today) {
+                        var ckobj = DtList != undefined ? DtList["DT" + cldday] : null;
+
+                        if (ckobj != null && ckobj != undefined) {
+                            $(tobj).attr("flag", ckobj.flag)
+                            if (ckobj.flag == "0") {
+                                tobj.className = "tdhv edittdck";
+                                lObj.innerHTML = ckobj.tjrs;
+                                $(tobj).find(".bot_div").html("设置休息");
+                                $(tobj).find(".div_setfull").html("设置约满");
+                            } else if (ckobj.flag == "1") {
+                                tobj.className = "tdhv td_xiuxi";
+                                lObj.innerHTML = "休息";
+                                $(tobj).find(".bot_div").html("取消休息");
+                                $(tobj).find(".div_setfull").html("设置约满");
+                            } else if (ckobj.flag == "2") {
+                                tobj.className = "tdhv td_xiuxi";
+                                lObj.innerHTML = "约满";
+                                $(tobj).find(".bot_div").html("设置休息");
+                                $(tobj).find(".div_setfull").html("取消约满");
+                            }
+                            tobj.setAttribute("title", "");
+                        }
+                        else {
+                            $(tobj).attr("flag", 0)
+                            tobj.className = "tdhv";//td_xiuxi
+                            lObj.innerHTML = "未排";
+                        }
+                    }
+                    else {
+                        tobj.className = "";
+                        sObj.innerHTML = '';
+                        lObj.innerHTML = '';
+                        tobj.setAttribute("title", "");
+                    }
+                    sObj.innerHTML = cldday;
+                } else { //非日期
+                    tobj.className = "";
+                    sObj.innerHTML = '';
+                    lObj.innerHTML = '';
+                    tobj.setAttribute("title", "");
+                }
+            }
+        }
+    </script>
+}

@@ -1,0 +1,256 @@
+﻿
+@{
+
+    List<Wjtc> lstTcxx = (List<Wjtc>)ViewBag.Tcxx;
+    string tcid = string.Empty;
+    if (lstTcxx != null && lstTcxx.Count > 0 && Model.ID == 0)
+    {
+        tcid = lstTcxx[0].TCID;
+    }
+    else
+    {
+        tcid = Model.TCID;
+    }
+    List<Wjbq> lstBq = (List<Wjbq>)ViewBag.Bqxx;
+    int bq = 0;
+    if (lstBq != null && lstBq.Count > 0 && Model.ID==0)
+    {
+        bq = lstBq[0].ID;
+    }
+    int bqCount = 0;
+    if (Model.ListBq !=null)
+    {
+        bqCount = Model.ListBq.Count;
+    }
+}
+@using NPOI.SS.Formula.Functions
+@model Wjtc
+<body class="layui-view-body">
+<div class="edittc_dialog">
+    <div class="layui-form" id="tcForm">
+        <input type="text" id="idTcid" hidden="" value="@Model.ID">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="text_star">*</span>套餐选择：</label>
+            <div class="layui-input-inline">
+                <select name="" id="idTcbh" lay-search="" lay-filter="cboTcbh">
+                    @foreach (var item in lstTcxx)
+                    {
+                        if (item.TCID.Equals(Model.TCID))
+                        {
+                            <option value="@item.TCID" selected="selected">@item.TCMC</option>
+                        }
+                        else if (lstTcxx.IndexOf(item).Equals(0) && Model.ID.Equals(0))
+                        {
+                            <option value="@item.TCID" selected="selected">@item.TCMC</option>
+                        }
+                        else
+                        {
+                            <option value="@item.TCID">@item.TCMC</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐价格：</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="idTcjg" readonly="readonly" value="@Model.JG">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐适用人群：</label>
+            <div class="layui-input-inline">
+                <textarea class="layui-textarea" id="idSyrq">@Model.SYRQ</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">套餐作用：</label>
+            <div class="layui-input-inline">
+                <textarea class="layui-textarea" id="idTczy">@Model.TCZY</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标签选择：</label>
+            <div class="layui-input-inline">
+                <select name="" id="idTcbq" lay-search="" lay-filter="cboTcbq">
+                    <option value="-1">请选择</option>
+                    @foreach (var item in lstBq)
+                    {
+                        <option value="@item.ID">@item.BQMC</option>
+                    }
+                </select>
+
+            </div>
+            <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnShowItem">查看项目</a>
+        </div>
+        @if (Model.ListBq != null && Model.ListBq.Count > 0)
+        {
+            foreach (var item in Model.ListBq)
+            {
+                <div class="layui-form-item">
+                    <label class="layui-form-label" ><span spanType="num">@((Model.ListBq.IndexOf(item) + 1) + ".")</span>@item.BQMC</label>
+                    <label class="layui-form-label" style="width: 100px;">检查深度</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" value="@item.JCSD" lx="BQSD" bqid="@item.BQID">
+                    </div>
+                    <div class="layui-input-inline">
+                        <a href="javascript:;" class="layui-btn layui-btn-blue yes" onclick="deletebq(this)">删除</a>
+                    </div>
+                </div>
+            }
+        }
+
+
+    </div>
+    
+    <div>
+        <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnSave">保存</a>
+        <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnCancel">返回上一页</a>
+    </div>
+</div>
+
+<!-- 套餐信息查看 -->
+<div class="moreInfoTab">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>组合项目编号</th>
+            <th>组合项目名称</th>
+            <th>单价</th>
+            <th>性别</th>
+        </tr>
+        </thead>
+        <tbody id="tcdetail"></tbody>
+
+    </table>
+</div>
+</body>
+@section scripts {
+    <script>
+        var bqcount = @bqCount;
+        $(function () {
+            $('#btnSave').on("click", function () {
+                if ($('#idTcbh').val() == null) {
+                    showmsg("请选择套餐", 2, 1);
+                    return;
+                }
+                var selBqList = $('#tcForm input[lx="BQSD"]');
+                var arrBqid = [];
+                var arrBqsd = [];
+                $.each(selBqList,function(i,v) {
+                    var sd = v.value;
+                    arrBqid.push(v.getAttribute("bqid"));
+                    if (sd !=1 && sd !=2 && sd!=3 ) {
+                        sd = 1;
+                    }
+                    arrBqsd.push(sd);
+                })
+                
+                $.ajax({
+                    url: "@Url.Content("~/Wjtc/Save")",
+                    data: {
+                        ID: parseInt($('#idTcid').val()),
+                        TCID: $('#idTcbh').val(),
+                        SYRQ: $('#idSyrq').val(),
+                        TCZY: $('#idTczy').val(),
+                        BQIDS:arrBqid.join(","),
+                        BQSDS:arrBqsd.join(","),
+                    },
+                    type: 'post',
+                    dataType: 'json',
+                    success(data) {
+                        if (data.Code == 200) {
+                            layer.closeAll();
+                            $('.edit_dialog').hide();
+                            showmsg(data.Msg, 1, 1);
+                            setTimeout(function () { $('#btnCancel').click() }, 1000);
+                        } else {
+                            showmsg(data.Msg, 2, 1);
+                        }
+                    }
+                });
+            });
+
+            $('#btnCancel').on("click", function () {
+                window.location.href = "@Url.Content("~/Wjtc/Index?yybh=")" + '@ViewBag.Yybh';
+            });
+
+            $('#btnShowItem').on("click", function () {
+                var url = "@Url.Content("~/Wjtc/TcZhxmDetail?yybh=")" + '@ViewBag.Yybh' + "&tcbh=" + $('#idTcbh').val();
+                var id = layer.load(0, { time: false, shade: 0.3 });
+                $.get(url, function (data) {
+
+                    $("#tcdetail").html(data);
+                    layer.close(id);
+
+                    layer.open({
+                        type: 1,
+                        title: [$("#idTcbh option:selected").text(), 'font-weight:bold;font-size:16px'],
+                        area: ['auto', '400px'],
+                        content: $('.moreInfoTab'),
+                        cancel: function () {
+                            $('.moreInfoTab').hide()
+                        }
+                    })
+
+                });
+            });
+
+        });
+
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('select(cboTcbh)', function (data) {
+                //console.log(data.elem); //得到select原始DOM对象
+                //console.log(data.value); //得到被选中的值
+                //console.log(data.othis); //得到美化后的DOM对象
+                $.ajax({
+                    url: "@Url.Content("~/Wjtc/GetTcjg")",
+                    data: { tcid: data.value },
+                    type: 'get',
+                    dataType: 'json',
+                    success(data) {
+                        if (data.Code == 200) {
+                            $('#idTcjg').val(data.Result);
+                        } else {
+                            showmsg(data.Msg, 2, 1);
+                        }
+                    }
+                });
+            });
+
+            form.on('select(cboTcbq)', function (data) {
+                //console.log(data.elem); //得到select原始DOM对象
+                //console.log(data.value); //得到被选中的值
+                //console.log(data.othis); //得到美化后的DOM对象
+                if (data.value == -1) return;
+                var lblList = $('#tcForm span[spanType="num"]');
+                bqcount = lblList.length +1;
+                var html = '';
+                html += '<div class="layui-form-item">';
+                html += '<label class="layui-form-label"><span spanType="num">' + bqcount + ".</span>" + data.elem[data.elem.selectedIndex].text + '</label>';
+                html += '<label class="layui-form-label" style="width: 100px;">检查深度</label>';
+                html += '<div class="layui-input-inline">';
+                html += '<input type="text" class="layui-input" lx="BQSD" bqid="'+ data.value +'">';
+                html += '</div>';
+                html += '<div class="layui-input-inline">';
+                html += '<a href="javascript:;" class="layui-btn layui-btn-blue yes" onclick="deletebq(this)">删除</a>';
+                html += '</div>';
+                html += '</div>';
+
+                $('#tcForm').append(html);
+            });
+        });
+
+
+        //删除标签
+        function deletebq(obj) {
+            $(obj).parent().parent().remove();
+            var lblList = $('#tcForm span[spanType="num"]');
+            $.each(lblList,function(i,v) {
+                $(v).html((i + 1) + ".");
+            });
+        }
+    </script>
+}

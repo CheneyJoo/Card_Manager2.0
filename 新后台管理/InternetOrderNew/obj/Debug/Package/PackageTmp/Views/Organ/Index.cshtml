@@ -1,0 +1,371 @@
+﻿@{
+    Layout = null;
+}
+@using System.Data
+@using Model
+@model XtJgbModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <link href="~/Content/assets/css/layui.css" rel="stylesheet" />
+    <script src="~/Content/assets/layui.js"></script>
+    <style>
+        .commonwidth {
+            width: 750px;
+        }
+
+        .custom-input {
+            display: inline-block;
+        }
+
+
+        body {
+            padding: 0 20px;
+            background-color: #f0f2f5;
+            max-height: 850px;
+            overflow-y: scroll;
+        }
+
+        form {
+            padding-top: 25px;
+            border-radius: 3px;
+            background-color: white;
+        }
+
+        .layui-input-block li {
+            height: 150px;
+            width: 150px;
+            padding: 4px;
+            border: 1px solid #D2D2D2;
+            position: relative;
+        }
+
+        .layui-input-block li {
+            float: left;
+            margin-right: 15px;
+        }
+
+            .layui-input-block li button {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: -19px;
+                margin-left: -44px;
+            }
+
+            .layui-input-block li img {
+                width: 150px;
+                height: 150px;
+                display: none;
+            }
+
+            .layui-input-block li span {
+                width: 25px;
+                height: 25px;
+                display: block;
+                background-color: red;
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                text-align: center;
+                line-height: 25px;
+                border-radius: 50%;
+                color: white;
+                font-weight: 800;
+                cursor: pointer;
+                display: none;
+            }
+
+        .layui-btn {
+            background-color: #177ce3;
+        }
+
+        .system-title {
+            height: 50px;
+            line-height: 50px;
+            font-size: 14px;
+        }
+
+            .system-title span {
+                margin: 0 5px;
+            }
+
+            .system-title a:first-child {
+                color: #999;
+            }
+    </style>
+</head>
+<body>
+    <div class="system-title">
+        <a href="@Url.Action("index","home")" title="第三方平台">第三方平台</a>
+        <span>/</span>
+        <a href="#" title="医院信息设置">医院信息设置</a>
+    </div>
+    <form class="layui-form">
+        <input type="hidden" name="id" value="@Model.id" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">医院名称：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <input type="text" name="jgmc" id="jgmc" value="@Model.jgmc" maxlength="64" autocomplete="off" placeholder="1-64个字符以内。" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">医院地址：</label>
+            <div class="layui-input-inline" style="width:290px;">
+                @{
+                    DataTable cityTable = ViewBag.CityTable as DataTable;
+                }
+                <select name="Province" id="Province" lay-filter="Province">
+                    @foreach (DataRow rowItem in cityTable.Rows)
+                    {
+                        <option value="@rowItem["SFBH"]" @(Convert.ToInt32(rowItem["SFBH"]) == Model.SFBH ? "selected" : string.Empty)>@rowItem["SFMC"]</option>
+                    }
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width:290px;">
+                <select id="CSBH" name="CSBH" lay-filter="CSBH"></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">详细地址：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <input type="text" name="jgdz" id="jgdz" value="@Model.jgdz" autocomplete="off" placeholder="例如：民治街道西头村75号。" class="layui-input" maxlength="32">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地理位置：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <div style="float:left; margin-right:46px;">
+                    <label>东经：</label>
+                    <input type="text" name="dj" id="dj" value="@Model.dj" maxlength="12" class="layui-input custom-input" style="width:225px;">
+                </div>
+                <div>
+                    <label>北纬：</label>
+                    <input type="text" name="bw" id="bw" value="@Model.bw" maxlength="12" class="layui-input custom-input" style="width:225px;">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系人：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <input type="text" id="lxr" name="lxr" autocomplete="off" value="@Model.lxr" maxlength="12" placeholder="请输入姓名，1-12个字符以内。" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系电话：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <input type="text" name="lxdh" id="lxdh" maxlength="12" value="@Model.lxdh" autocomplete="off" placeholder="请输入含区号的座机或手机号码。" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">支付方式：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="zyfs" value="0" lay-skin="primary" title="在线支付" @(Model.zyfs.Equals(0) ? "checked" : string.Empty)>
+                <input type="radio" name="zyfs" value="1" lay-skin="primary" title="到院支付" @(Model.zyfs.Equals(1) ? "checked" : string.Empty)>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">医院性质：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="jgxz" lay-filter="jgxz" value="1" title="公立医院" @(Model.jgxz.Equals(1) ? "checked" : string.Empty)>
+                <input type="checkbox" name="jgxz" lay-filter="jgxz" value="2" title="民营医院" @(Model.jgxz.Equals(2) ? "checked" : string.Empty)>
+                <input type="checkbox" name="jgxz" lay-filter="jgxz" value="3" title="专业体检中心" @(Model.jgxz.Equals(3) ? "checked" : string.Empty)>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">医院等级：</label>
+            <div class="layui-input-inline" style="width:590px;">
+                <select name="yydj" id="yydj">
+                    <option value="">- - - 请选择医院等级 - - -</option>
+                    <option value="1" @(Model.yydj.Equals("1") ? "selected" : string.Empty)>三甲</option>
+                    <option value="5" @(Model.yydj.Equals("5") ? "selected" : string.Empty)>三乙</option>
+                    <option value="6" @(Model.yydj.Equals("6") ? "selected" : string.Empty)>三丙</option>
+                    <option value="7" @(Model.yydj.Equals("7") ? "selected" : string.Empty)>二甲</option>
+                    <option value="8" @(Model.yydj.Equals("8") ? "selected" : string.Empty)>二乙</option>
+                    <option value="9" @(Model.yydj.Equals("9") ? "selected" : string.Empty)>二丙</option>
+                    <option value="10" @(Model.yydj.Equals("10") ? "selected" : string.Empty)>一甲</option>
+                    <option value="11" @(Model.yydj.Equals("11") ? "selected" : string.Empty)>一乙</option>
+                    <option value="12" @(Model.yydj.Equals("12") ? "selected" : string.Empty)>一丙</option>
+                    <option value="2" @(Model.yydj.Equals("2") ? "selected" : string.Empty)>三级</option>
+                    <option value="3" @(Model.yydj.Equals("3") ? "selected" : string.Empty)>二级</option>
+                    <option value="4" @(Model.yydj.Equals("4") ? "selected" : string.Empty)>一级</option>
+                    <option value="13" @(Model.yydj.Equals("13") ? "selected" : string.Empty)>其他</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" @(Model.sfqy.Equals(1) ? "checked" : string.Empty) value="1" name="sfqy" lay-skin="switch" lay-filter="switchTest" lay-text="启用|禁用">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">医院图片：</label>
+            <div class="layui-input-block">
+                <ul>
+                    @{
+                        List<string> imgs = Model.yyimage.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    }
+                    <li>
+                        <div>
+                            <button id="BtnUpload1" type="button" class="layui-btn" @(imgs.Count >= 1 ? "style=display:none" : string.Empty)><i class="layui-icon">&#xe67c;</i>浏览</button>
+                            <input type="hidden" id="img1" name="img" value="@(imgs.Count>=1?imgs[0]:string.Empty)" />
+                            <img title="医院图片" alt="医院图片" @(imgs.Count >= 1 ? "style=display:block" : string.Empty) src="@(imgs.Count>=1?imgs[0]:string.Empty)" />
+                            <span @(imgs.Count >= 1 ? "style=display:block" : string.Empty)>X</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <button id="BtnUpload2" type="button" class="layui-btn" @(imgs.Count >= 2 ? "style=display:none" : string.Empty)><i class="layui-icon">&#xe67c;</i>浏览</button>
+                            <input type="hidden" id="img2" name="img" value="@(imgs.Count>=2?imgs[1]:string.Empty)" />
+                            <img title="医院图片" alt="医院图片" @(imgs.Count >= 2 ? "style=display:block" : string.Empty) src="@(imgs.Count>=2?imgs[1]:string.Empty)" />
+                            <span @(imgs.Count >= 2 ? "style=display:block" : string.Empty)>X</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <button id="BtnUpload3" type="button" class="layui-btn" @(imgs.Count >= 3 ? "style=display:none" : string.Empty)><i class="layui-icon">&#xe67c;</i>浏览</button>
+                            <input type="hidden" id="img3" name="img" value="@(imgs.Count>=3?imgs[2]:string.Empty)" />
+                            <img title="医院图片" alt="医院图片" @(imgs.Count >= 3 ? "style=display:block" : string.Empty) src="@(imgs.Count>=3?imgs[2]:string.Empty)" />
+                            <span @(imgs.Count >= 3 ? "style=display:block" : string.Empty)>X</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <button id="BtnUpload4" type="button" class="layui-btn" @(imgs.Count >= 4 ? "style=display:none" : string.Empty)><i class="layui-icon">&#xe67c;</i>浏览</button>
+                            <input type="hidden" id="img4" name="img" value="@(imgs.Count>=4?imgs[3]:string.Empty)" />
+                            <img title="医院图片" alt="医院图片" @(imgs.Count >= 4 ? "style=display:block" : string.Empty) src="@(imgs.Count>=4?imgs[3]:string.Empty)" />
+                            <span @(imgs.Count >= 4 ? "style=display:block" : string.Empty)>X</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">医院logo：</label>
+            <div class="layui-input-block">
+                <ul>
+                    <li>
+                        <div>
+                            <button id="BtnUpload5" @(!string.IsNullOrEmpty(Model.yylogoimage) ? "style=display:none" : string.Empty) type="button" class="layui-btn"><i class="layui-icon">&#xe67c;</i>浏览</button>
+                            <input type="hidden" id="logo" name="img" value="@Model.yylogoimage" />
+                            <img title="医院logo" alt="医院logo" src="@Model.yylogoimage" @(!string.IsNullOrEmpty(Model.yylogoimage) ? "style=display:block" : string.Empty) />
+                            <span @(!string.IsNullOrEmpty(Model.yylogoimage) ? "style=display:block" : string.Empty)>X</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">医院介绍：</label>
+            <div class="layui-input-block" style="width:700px;">
+                <textarea placeholder="请输入内容" name="yyjs" class="layui-textarea" id="yyjs">@Model.yyjs</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="BtnSave" id="BtnSave"><i class="layui-icon">&#xe605;</i>确定</button>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(".layui-input-block li span").click(function () {
+            $(this).siblings("button").show().end().siblings("input[name=img]").val("").next().prop("src", "#").hide().end().end().hide();
+        });
+        layui.use(['form', 'layedit', 'laydate', "upload"], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate,
+                upload = layui.upload;
+
+            InnitUpload.call(upload, "BtnUpload1");
+            InnitUpload.call(upload, "BtnUpload2");
+            InnitUpload.call(upload, "BtnUpload3");
+            InnitUpload.call(upload, "BtnUpload4");
+            InnitUpload.call(upload, "BtnUpload5");
+
+            //创建一个编辑器
+            var editIndex = layedit.build('yyjs', {
+                uploadImage:
+                {
+                    url: '@Url.Content("~/Organ/UploadImg")',
+                }
+            });
+
+            GetCity({ value: $("#Province option:checked").val() }, form);
+            form.on("checkbox(jgxz)", function (data) {
+                var siblingsItems = $(data.elem).siblings("input[type=checkbox]");
+                if (data.elem.checked == false && siblingsItems.find(":checked").length == 0) {
+                    data.elem.checked = true;
+                } else {
+                    siblingsItems.prop("checked", false);
+                }
+                form.render('checkbox');
+            });
+
+            form.on("select(Province)", function (data) {
+                GetCity(data, form);
+            });
+
+            //监听提交
+            form.on('submit(BtnSave)', function (data) {
+                data.field.yylogoimage = $("#logo").val();
+                var imgLines = [];
+                $("#img1,#img2,#img3,#img4").each(function () {
+                    if (this.value != "") {
+                        imgLines.push(this.value);
+                    }
+                });
+                data.field.yyjs = layedit.getContent(editIndex);
+                data.field.yyimage = imgLines.toString();
+                var url = '@Url.Content("~/Organ/SaveData")';
+
+                $.post(url, data.field, function (xhrData) {
+                    if (xhrData.Code == 200) {
+                        layer.msg("更新成功", { icon: 1, time: 1500 }, function () {
+                            window.location.href = '@Url.Content("~/Organ/Index")';
+                        });
+                    }
+                }, "JSON");
+                return false;
+            });
+
+        });
+        function GetCity(data, form) {
+            var url = '@Url.Content("~/Organ/GetCity")';
+            $.post(url, { id: data.value }, function (xhrData) {
+                if (xhrData.Code == 200) {
+                    $("#CSBH option").remove();
+                    var seletecd = "@Model.CSBH";
+                    $(xhrData.Data).each(function () {
+                        $("#CSBH").append("<option value=" + this.CSBH + "" + ((this.CSBH == seletecd) ?" selected":"") + " >" + this.CSMC + "</option>");
+                    });
+
+                    form.render("select");
+                }
+            }, "json");
+        }
+        function InnitUpload(elm) {
+            var uploadInst = this.render({
+                accept: "images",
+                elem: "#" + elm,
+                url: "@Url.Content("~/Organ/UploadImg")",
+                before: function () {
+                },
+                done: function (res) {
+                    layer.msg(res.msg, { icon: 1, time: 1500 }, function () {
+                        $("#" + elm).hide().siblings("input[name=img]").val(res.data.src).next().show().prop("src",  res.data.src).next().show();
+                    });
+                },
+                error: function () {
+                    layer.msg("图片上传失败.", { icon: 2 });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

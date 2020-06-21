@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+@model List<Model.XtZhxmbModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.zhxmbh</td>
+            <td>@item.zhxmmc</td>
+            <td>@item.zhxmjg</td>
+            @if (item.xb == 1)
+            {
+                <td>男</td>
+            }
+            else if (item.xb == 0)
+            {
+                <td>女</td>
+            }
+            else
+            {
+                <td>通用</td>
+            }
+            @*<td>@(item.sffk == 0 ? "否" : "是")</td>*@
+        </tr>
+    }
+}

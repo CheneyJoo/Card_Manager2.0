@@ -1,0 +1,115 @@
+html,body{
+    height: 100%;
+    width: 100%;
+}
+body{
+    background: url(../images/login_bg.png) no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+}
+.login-container {
+    background: #fff;
+    padding: 0 30px;
+	padding-bottom: 20px;
+    position: fixed;
+    top: 50%;
+    left: 60%;
+    margin-top: -280px;
+    border-radius: 4px;
+}
+.login-form {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.login_logo {
+    text-align:center;
+    padding: 35px 0 40px;
+}
+.login_logo img {
+    width: 200px;
+}
+.input-group {
+    width: 320px;
+    margin: 0 auto 20px;
+    font-size:0;
+    position: relative;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 20px;
+}
+.input-group:last-child {
+    margin-bottom: 15px;
+}
+.input-group input {
+    font-size: 16px;   
+    vertical-align: middle;
+    margin-left: 20px; 
+    outline: none;
+    border: none;
+    background: none;
+}
+#imgcode {
+    position: absolute;
+    right:0;
+    top:-8px;
+}
+input:-internal-autofill-selected {
+    background: none !important;
+}
+.login-button {
+    /*width: 370px;*/
+	height: 42px;
+    line-height: 42px;
+    color: #ffffff;
+    font-size: 16px;
+    border: 0;
+    margin: 0 auto 20px;
+    text-align: center;
+	background-color: #1f77ef;
+	border-radius: 3px;
+    display: block;
+    cursor: pointer;
+    width: 100%;
+}
+.login-button:hover {
+   background:#0968e8;   
+}
+.remBox {
+    /*width: 370px;*/
+    margin:0 auto 20px;
+    font-size: 14px;
+    color: #666666;
+}
+.login_text {
+    font-size: 14px;
+    color: #b4bfcc;
+    text-align: center;
+}
+.login_text li {
+    display: inline-block;
+    margin: 0 15px 10px;   
+}
+.logintip_wrap {
+    margin: 0 auto 20px;
+    /*width: 370px;*/
+	height: 24px;
+    line-height: 25px;
+	background-color: #ffebeb;
+	border: solid 1px #faccc6;
+    padding-left: 14px;
+    font-size:0;
+    display: none;
+}
+.logintip_wrap img {
+    width: 16px;
+    height: 16px;
+}
+.logintip_wrap span {
+    display: inline-block;
+    vertical-align:middle;
+    font-size: 14px;
+    margin-left: 14px;
+    color: #e4393c;
+    line-height: 25px;
+    height: 24px;
+}

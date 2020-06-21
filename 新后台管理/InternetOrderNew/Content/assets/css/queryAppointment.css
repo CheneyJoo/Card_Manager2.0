@@ -1,0 +1,287 @@
+#con {
+	padding-top: 20px;
+}
+#con .bSide_nav .slide_pic{
+	top: 330px;
+}
+/*#con .bSide_nav li .bSide_selPic {
+	background-image: url(../img/public/bSide8_1.png);
+}*/
+
+ 
+
+/*弹出层信息开始*/
+
+#ranking {
+	display: none;
+}
+
+#ranking .setPlaces_load {
+	position: absolute;
+	width: 510px;
+	height: 560px;
+	top: 50%;
+	left: 50%;
+	margin-left: -255px;
+	margin-top: -280px;
+	background-color: #fff;
+	border-radius: 5px;
+}
+
+#ranking .setPlaces_load .setPlaces_info {
+	padding: 20px 50px 20px 40px;
+}
+
+#ranking .setPlaces_info {
+	color: #6e6e6f;
+}
+
+#ranking .setPlaces_info>ul {
+	padding-bottom: 27px;
+}
+
+#ranking .setPlaces_load .setPlaces_info>ul li {
+	margin-top: 6px;
+	line-height: 42px;
+}
+
+#ranking .setPlaces_load li input {
+	width: 301px;
+	height: 40px;
+	padding-left: 5px;
+	border: 1px solid #e9e9e9;
+}
+
+#ranking .setPlaces_info h3 {
+	padding-left: 20px;
+	background-color: #e9f6e8;
+}
+
+#ranking .setPlaces_info h3 span {
+	color: #eb5b41;
+	height: 38px;
+	line-height: 38px;
+}
+
+#ranking .setPlaces_info .weekInfo {
+	padding-top: 30px;
+	overflow: hidden;
+}
+
+#ranking .setPlaces_info .weekInfo>span {
+	float: left;
+}
+
+#ranking .setPlaces_info .weekInfo .wekInfo_sel {
+	margin-left: 112px;
+}
+
+#ranking .wekInfo_sel ul {
+	overflow: hidden;
+}
+
+#ranking .wekInfo_sel ul li {
+	float: left;
+	margin-bottom: 20px;
+}
+
+#ranking .wekInfo_sel ul li + li {
+	margin-left: 28px;
+}
+
+#ranking .wekInfo_sel ul .lihead {
+	margin-left: 15px;
+}
+
+#ranking .wekInfo_sel i {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	font-style: normal;
+	border: 1px solid #d0d0d0;
+	border-radius: 2px;
+	margin-right: 8px;
+}
+
+#ranking .wekInfo_sel .checkSel {
+	width: 12px;
+	height: 12px;
+	border: none;
+	background: url(../img/scheduling/confirm_press.png) no-repeat;
+}
+
+#ranking .weekInfo input {
+	width: 70px;
+	height: 20px;
+	border: 1px solid #d0d0d0;
+	text-align: center;
+	margin-left: 5px;
+	margin-right: 10px;
+	font-size: 12px;
+	line-height: 22px;
+}
+
+
+/*弹出层信息结束*/
+
+
+/**日历区域开始**/
+.dateArea h3{
+	float: left;
+	margin-left: 100px;
+	margin-top: 45px;
+	margin-bottom: 5px;
+	font-size: 16px;
+	color: #4b4643;
+}
+.content {
+	
+	width: 830px;
+	margin: 0 auto;
+}
+
+.datetable {
+
+	background: #fff;
+}
+
+.datetable td {
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	text-align: center;
+}
+.datetable td:first-child{
+	border-left: 1px solid #ccc;
+}
+.datetable thead {
+	
+
+}
+
+.datetable thead tr td {
+	height: 70px;
+	padding-bottom: 10px;
+	position: relative;
+	font-size: 20px;
+	color: #000;
+	text-align: center;
+	border-left: 1px solid #fff !important;
+	border-right: 1px solid #fff;
+}
+.datetable thead tr .ePrise_arrange{
+	position: absolute;
+	right: 0;
+	top: 18px;
+	width: 105px;
+	height: 40px;
+	line-height: 40px;
+	color: #fff;
+	background-color: #49b140;
+	font-size: 14px;
+	
+	border-radius: 4px;
+}
+.datetable thead tr .arrowFlip{
+	position: absolute;
+	left: 0;
+	top: 18px;
+}
+.datetable thead tr .arrowFlip .company{
+	position: relative;
+	width: 225px;
+	height: 30px;
+	float: left;
+	font-size: 14px;
+	text-align: left;
+	line-height: 30px;
+	color: #6e6e6f;
+	padding-left: 10px;
+	/*border: 1px solid #ccc;
+	background: url(../img/public/login_down.png) no-repeat;
+	background-position: 210px 12px;*/
+    cursor: pointer;
+}
+.datetable thead tr .arrowFlip .company:hover {
+	background: url(../img/public/login_up.png) no-repeat;
+	background-position: 210px 12px;    
+}
+.datetable thead tr .company .companyInfo{
+	position: absolute;
+	left: -1px;
+	top: 31px;
+	min-width: 235px;
+    z-index: 10000;
+	border: 1px solid #ccc;
+	display: none;
+	background-color: #fafafa;
+    cursor: pointer;
+	
+}.datetable thead tr .company .companyInfo li{
+	padding-left: 10px;
+}
+.datetable thead tr .company .companyInfo li:hover{
+	/*background-color: yellowgreen;*/
+     background-color: #49b140;
+    color: #fff;
+}
+.datetable thead tr .company:hover {
+	 
+}
+.datetable thead tr .company:hover .companyInfo{
+
+	border-top: none;
+}
+.datetable thead tr .arrowFlip a{
+	float: left;
+	width: 48px;
+	height: 30px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+.datetable thead tr .arrowFlip .left_arrow{
+	border-radius: 3px 0 0 3px;
+	margin-left: 53px;
+	background: url(../img/scheduling/left_arrow.png) no-repeat center;
+}
+.datetable thead tr .arrowFlip .right_arrow{
+	margin-left: 150px;
+	 
+	border-radius:  0 3px  3px 0;
+	background: url(../img/scheduling/right_arrow.png) no-repeat center;
+}
+.datetable thead tr .arrowFlip .today_arrow{
+	width: 60px;
+	text-align: center;
+	font-size: 16px;
+	line-height: 30px;
+	color: #6e6e6f;
+	margin-left:20px;
+}
+.datetable thead td span {
+	padding: 0 5px;
+}
+
+.datetable tbody td {
+	height: 70px;
+	width: 115px;
+	font-size: 16px;
+}
+
+/*hwg 2016.3.1*/
+.datetable thead tr:first-child td{
+	border: 0px;
+}
+.datetable thead tr .lastTd{
+	height: 0;
+	padding-bottom: 0;
+}
+.contentlist-row {
+    width: 100%;
+    text-align: right;
+    font-size: 14px;
+    color: #666;
+    padding-bottom: 8px;
+
+}
+
+/**日历区域结束**/
