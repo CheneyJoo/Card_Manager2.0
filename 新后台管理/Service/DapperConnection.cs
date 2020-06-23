@@ -22,7 +22,6 @@ namespace Service
         public DapperConnection()
         {
             _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
-            _connectionKKString = ConfigurationManager.ConnectionStrings["DefaultConnectionKk"].ToString();
 
         }
 

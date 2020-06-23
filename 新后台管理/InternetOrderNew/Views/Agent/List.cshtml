@@ -1,0 +1,59 @@
+﻿
+@{
+    Layout = null;
+}
+@using System.Data
+@model DataTable
+<table class="layui-table layui-form" lay-skin="nob">
+    <thead>
+        <tr>
+            <th style="width: 60px;"><input type="checkbox" name="checkall" /></th>
+            <th style="width: 60px;">编号</th>
+            <th>代理商</th>
+            <th>卡数量</th>
+            <th>地区</th>
+            <th>联系人</th>
+            <th>电话</th>
+            <th style="width: 80px;">创建时间</th>
+            <th style="width: 80px;">营业执照</th>
+            <th style="width: 80px;">身份证</th>
+            <th style="width: 80px;">承诺函</th>
+            <th style="width: 80px;">状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody id="user-tb">
+        @{
+            for (int i = 0; i < Model.Rows.Count; i++)
+            {
+                <tr>
+                    <td><input type="checkbox" name="chk_agent" value="@Model.Rows[i]["AGENT_ID"]" /><div class="layui-unselect layui-form-checkbox" lay-skin=""><i class="layui-icon"></i></div></td>
+                    <td>@Model.Rows[i]["AGENT_NO"]</td>
+                    <td>@Model.Rows[i]["AGENT_NAME"]</td>
+                    <td>@Model.Rows[i]["AGENT_CARD_NUMBER"]</td>
+                    <td>@Model.Rows[i]["AGENT_AREA"]</td>
+                    <td>@Model.Rows[i]["AGENT_CONTACTS"]</td>
+                    <td>@Model.Rows[i]["AGENT_TEL"]</td>
+                    <td>@Convert.ToDateTime(@Model.Rows[i]["CREATED_TIME"]).ToString("yyyy-MM-dd")</td>
+                    <td><img src="@Model.Rows[i]["AGENT_BUSINESS_LICENSE"]" /></td>
+                    <td><img src="@Model.Rows[i]["AGENT_ID_CARD"]" /></td>
+                    <td><img src="@Model.Rows[i]["AGENT_COMMITMENT_LETTER"]" /></td>
+                    <td>@(Convert.ToString(Model.Rows[i]["STATUS"]) == "1" ? "启用" : "停用")</td>
+                    <td>
+                        <a class="text_blue" href="javascript:updatestatus('@Model.Rows[i]["AGENT_ID"]',0)">详情</a>
+                        <a class="text_blue" href="javascript:showDialog('@Model.Rows[i]["AGENT_ID"]')">修改</a>
+                        @if (Convert.ToString(Model.Rows[i]["STATUS"]) == "1")
+                        {
+                            <a class="text_blue" href="javascript:disableAgent('@Model.Rows[i]["AGENT_ID"]',0)">停用</a>
+                        }
+                        else
+                        {
+                            <a class="text_blue" href="javascript:ableAgent('@Model.Rows[i]["AGENT_ID"]',0)">启用</a>
+                        }
+                    </td>
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>

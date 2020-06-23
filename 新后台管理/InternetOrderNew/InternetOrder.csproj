@@ -64,6 +64,14 @@
     <Reference Include="MK.Common">
       <HintPath>..\packages\MK.Common.dll</HintPath>
     </Reference>
+    <Reference Include="NBear.Common, Version=3.7.2.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NBear.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NBear.Data, Version=3.7.2.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NBear.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -143,8 +151,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\assets\css\admin.css" />
+    <Content Include="Content\assets\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\assets\css\bootstrap-override.css" />
     <Content Include="Content\assets\css\bootstrap.css" />
+    <Content Include="Content\assets\css\font-awesome.css" />
+    <Content Include="Content\assets\css\font-awesome.min.css" />
+    <Content Include="Content\assets\css\format.table.css" />
     <Content Include="Content\assets\css\formSelects-v4.css" />
     <Content Include="Content\assets\css\layui.css" />
     <Content Include="Content\assets\css\layui.mobile.css" />
@@ -159,6 +171,7 @@
     <Content Include="Content\assets\css\modules\layer\default\loading-2.gif" />
     <Content Include="Content\assets\css\queryAppointment.css" />
     <Content Include="Content\assets\css\qydetail.css" />
+    <Content Include="Content\assets\css\radio-checkbox-style.css" />
     <Content Include="Content\assets\css\view.css" />
     <Content Include="Content\assets\font2\demo.css" />
     <Content Include="Content\assets\font2\demo_index.html" />
@@ -494,6 +507,7 @@
     <Content Include="Views\Organ\Index.cshtml" />
     <Content Include="Views\Qudao\Update.cshtml" />
     <Content Include="Views\Agent\Index.cshtml" />
+    <Content Include="Views\Agent\List.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

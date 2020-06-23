@@ -2,67 +2,427 @@
 @{
     Layout = null;
 }
+@using System.Data
+@model DataTable
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>代理商管理</title>
-    <link href="~/Content/assets/css/bootstrap.css" rel="stylesheet" />
-    <link href="~/Content/assets/css/bootstrap-override.css" rel="stylesheet" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="~/Content/assets/css/layui.css?v=2">
+    <link rel="stylesheet" href="~/Content/assets/font2/iconfont.css">
+    <link rel="stylesheet" href="~/Content/assets/css/view.css" />
+    <link rel="stylesheet" href="~/Content/assets/css/admin.css" />
+    <link rel="icon" href="/favicon.ico">
+    <title></title>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <style>
+        body {
+            overflow-y: scroll;
+        }
+    </style>
 </head>
-<body>
-    <div class=" panel-body ">
-        <div class="query-table ">
-            <div class="row">
-                <div class="col-sm-4 col-lg-3">
-                    <div class="input-group">
-                        <label class="input-group-addon" for="txtusername">代理商</label>
-                        <input type="text" maxlength="20" class="form-control" id="txtusername" placeholder="代理商" />
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-8 col-lg-6 col-btn">
-                    <button class="btn btn-default" id="btnquery"><i class="glyphicon glyphicon-search"></i>查询</button>
-                </div>
+<body class="layui-view-body">
+    <div class="layui-content">
+        <div class="layui-page-header">
+            <div class="pagewrap">
+                <span class="layui-breadcrumb">
+                    <a href="">基本设置</a>
+                    <a class="on">代理商管理</a>
+                </span>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+        <div class="tool_pannel">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-form-inline">
+                        <label class="layui-form-label">代理商：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" maxlength="20" class="layui-input" id="txtagentname" placeholder="代理商" />
+                        </div>
+                    </div>
+                    <div class="layui-form-inline">
+                        <a class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</a>
+                        <a class="layui-btn layui-btn-blue" onclick="showDialog(0)"><i class="iconfont icon-sousuo"></i>新增</a>
+                        <a class="layui-btn layui-btn-blue" onclick="deleteAgents()"><i class="iconfont icon-sousuo"></i>删除</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="table_wrap" id="QueryTab">
+            <table class="layui-table layui-form" lay-skin="nob">
                 <thead>
                     <tr>
+                        <th style="width: 60px;"><input type="checkbox" name="checkall" /></th>
                         <th style="width: 60px;">编号</th>
                         <th>代理商</th>
                         <th>卡数量</th>
                         <th>地区</th>
                         <th>联系人</th>
                         <th>电话</th>
-                        <th style="width: 50px;">创建时间</th>
-                        <th style="width:50px;">营业执照</th>
+                        <th style="width: 80px;">创建时间</th>
+                        <th style="width: 80px;">营业执照</th>
                         <th style="width: 80px;">身份证</th>
+                        <th style="width: 80px;">承诺函</th>
                         <th style="width: 80px;">状态</th>
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody id="user-tb"></tbody>
+                <tbody id="user-tb">
+                    @{
+                        for (int i = 0; i < Model.Rows.Count; i++)
+                        {
+                            <tr>
+                                <td><input type="checkbox" name="chk_agent" value="@Model.Rows[i]["AGENT_ID"]" /></td>
+                                <td>@Model.Rows[i]["AGENT_NO"]</td>
+                                <td>@Model.Rows[i]["AGENT_NAME"]</td>
+                                <td>@Model.Rows[i]["AGENT_CARD_NUMBER"]</td>
+                                <td>@Model.Rows[i]["AGENT_AREA"]</td>
+                                <td>@Model.Rows[i]["AGENT_CONTACTS"]</td>
+                                <td>@Model.Rows[i]["AGENT_TEL"]</td>
+                                <td>@Convert.ToDateTime(@Model.Rows[i]["CREATED_TIME"]).ToString("yyyy-MM-dd")</td>
+                                <td><img src="@Model.Rows[i]["AGENT_BUSINESS_LICENSE"]" /></td>
+                                <td><img src="@Model.Rows[i]["AGENT_ID_CARD"]" /></td>
+                                <td><img src="@Model.Rows[i]["AGENT_COMMITMENT_LETTER"]" /></td>
+                                <td>@(Convert.ToString(Model.Rows[i]["STATUS"]) == "1" ? "启用" : "停用")</td>
+                                <td>
+                                    <a class="text_blue" href="javascript:updatestatus('@Model.Rows[i]["AGENT_ID"]',0)">详情</a>
+                                    <a class="text_blue" href="javascript:showDialog('@Model.Rows[i]["AGENT_ID"]')">修改</a>
+                                    @if (Convert.ToString(Model.Rows[i]["STATUS"]) == "1")
+                                    {
+                                        <a class="text_blue" href="javascript:disableAgent('@Model.Rows[i]["AGENT_ID"]',0)">停用</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="text_blue" href="javascript:ableAgent('@Model.Rows[i]["AGENT_ID"]',0)">启用</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
             </table>
+            <!-- 分页样式 -->
+            @(ViewBag.Pager)
         </div>
-        <select class="form-control pagesize" id="pagesize">
-            <option>10</option>
-            <option>25</option>
-            <option>50</option>
-            <option>100</option>
-        </select>
-        <ul class="pagination " id="divpage"></ul>
     </div>
+    <!-- 编辑弹窗 -->
+    <div class="edit_dialog" style="display:none">
+        <div class="layui-form">
+            <input type="text" id="hidAgentID" hidden="">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>代理商：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="txtAgent" class="layui-input" placeholder="请输入代理商">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>联系人：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="txtAgentContract" class="layui-input" placeholder="请输入代理商联系人">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>账号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="txtAgentAccount" class="layui-input" placeholder="请输入代理商账号">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>电话：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="txtAgentTel" class="layui-input" placeholder="请输入代理商电话">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>地区：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="txtAgentArea" class="layui-input" placeholder="请输入代理商地区">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>营业执照：</label>
+                <div class="layui-input-inline">
+                    <img title="营业执照" alt="营业执照" id="img_agent_business_license" src="" style="display:none;width:100px;height:100px;" />
+                    <button id="BtnUpload1" type="button" class="layui-btn"><i class="layui-icon">&#xe67c;</i>浏览</button>
+                    <input type="hidden" id="txt_agent_business_license" name="img" value="" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>身份证：</label>
+                <div class="layui-input-inline">
+                    <img title="身份证" alt="身份证" id="img_agent_id_card" src="" style="display:none;width:100px;height:100px;" />
+                    <button id="BtnUpload2" type="button" class="layui-btn"><i class="layui-icon">&#xe67c;</i>浏览</button>
+                    <input type="hidden" id="txt_agent_id_card" name="img" value="" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="text_star">*</span>承诺函：</label>
+                <div class="layui-input-inline">
+                    <img title="承诺函" alt="承诺函" id="img_agent_commitment_letter" src="" style="display:none;width:100px;height:100px;" />
+                    <button id="BtnUpload3" type="button" class="layui-btn"><i class="layui-icon">&#xe67c;</i>浏览</button>
+                    <input type="hidden" id="txt_agent_commitment_letter" name="img" value="" />
+                </div>
+            </div>
+            <div class="buttonwrap">
+                <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnSave">保存</a>
+                <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel">取消</a>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="nowPageIndex" value="1" />
+    <script src="~/Content/assets/jquery.js?type=1.1"></script>
+    <script src="~/Content/assets/layui.all.js?type=1.1"></script>
+    <script src="~/Content/assets/lay/modules/laydate.js?type=1.1"></script>
+    <script src="~/Content/Js/index.js?type=1.1"></script>
+    <script src="~/Content/Js/jiaohu.js?type=1.1"></script>
+    <script type="text/javascript">
+        function changePostList(page) {
 
+            var agentname = $("#txtagentname").val();
+            $("#nowPageIndex").val(page);
+            $.ajax({
+                   url: '@Url.Content("~/Agent/List")',
+                   data: { rows: 10, page: page, maxpages: 10,agentname:agentname },
+                   type: 'post',
+                   dataType: 'html',
+                   success(data) {
+                    $("#QueryTab").html(data);
+                   }
+              });
+        }
+        layui.use(['form', 'layedit', 'laydate', "upload"], function () {
+            var upload = layui.upload;
+
+            InnitUpload.call(upload, "BtnUpload1");
+            InnitUpload.call(upload, "BtnUpload2");
+            InnitUpload.call(upload, "BtnUpload3");
+        });
+        function showDialog(AGENT_ID) {
+            chearform();
+            if (AGENT_ID != '0') {
+                $("#hidAgentID").val(AGENT_ID);
+                editformload();
+            }
+            layer.open({
+                type: 1,
+                closeBtn: 1, //不显示关闭按钮
+                title: ["保存代理商", 'font-weight:bold;font-size:16px'],
+                area: ['540px', '750px'],
+                content: $('.edit_dialog'),
+                cancel: function () {
+                    $('.edit_dialog').hide();
+                }
+            });
+        }
+
+        function chearform()
+        {
+            $("#hidAgentID").val('');
+            $('#txtAgent').val('');
+            $('#txtAgentContract').val('');
+            $('#txtAgentAccount').val('');
+            $('#txtAgentTel').val('');
+            $('#txtAgentArea').val('');
+            $('#txt_agent_business_license').val('').next;
+            $("#img_agent_business_license").hide().prop("src", '');
+            $('#txt_agent_id_card').val('');
+            $("#img_agent_id_card").hide().prop("src", '');
+            $('#txt_agent_commitment_letter').val('');
+            $("#img_agent_commitment_letter").hide().prop("src", '');
+            $("#BtnUpload3").show().next().hide().prop("src", '');
+        }
+
+        function editformload()
+        {
+               var newdata = {
+                    Agent_ID: $("#hidAgentID").val()
+                }
+               $.ajax({
+                   url: '@Url.Content("~/Agent/QueryOneAgent")',
+                   data: newdata,
+                   type: 'post',
+                   dataType: 'json',
+                   success(data) {
+                       if (data != '') {
+                           var obj = JSON.parse(data);
+							 $('#txtAgent').val(obj[0].agent_name);
+                            $('#txtAgentContract').val(obj[0].agent_contacts);
+                            $('#txtAgentAccount').val(obj[0].agent_account);
+                            $('#txtAgentTel').val(obj[0].agent_tel);
+                            $('#txtAgentArea').val(obj[0].agent_area);
+                            $('#txt_agent_business_license').val(obj[0].agent_business_license);
+                            $("#img_agent_business_license").show().prop("src", obj[0].agent_business_license);
+                            $('#txt_agent_id_card').val(obj[0].agent_id_card);
+                            $("#img_agent_id_card").show().prop("src", obj[0].agent_id_card);
+                            $('#txt_agent_commitment_letter').val(obj[0].agent_commitment_letter);
+                            $("#img_agent_commitment_letter").show().prop("src", obj[0].agent_commitment_letter);
+                            $("#btnupload3").next("img").show().prop("src", obj[0].agent_commitment_letter);
+                       }
+                   }
+              });
+        }
+
+        function fromcheck() {
+            if ($('#txtAgent').val().trim() == '') {
+                layer.msg("代理商不能为空");
+                $('#txtAgent')[0].focus();
+                return false;
+            }
+            if ($('#txtAgentContract').val().trim() == '') {
+                layer.msg("代理商联系人不能为空");
+                $('#txtAgentContract')[0].focus();
+                return false;
+            }
+            if ($('#txtAgentAccount').val().trim() == '') {
+                layer.msg("代理商账号不能为空");
+                $('#txtAgentAccount')[0].focus();
+                return false;
+            }
+            if ($('#txtAgentTel').val().trim() == '') {
+                layer.msg("代理商电话不能为空");
+                $('#txtAgentTel')[0].focus();
+                return false;
+            }
+            if ($('#txtAgentArea').val().trim() == '') {
+                layer.msg("代理商地区不能为空");
+                $('#txtAgentArea')[0].focus();
+                return false;
+            }
+             if ($('#txt_agent_business_license').val().trim() == '') {
+                layer.msg("请上传营业执照");
+                return false;
+            }
+             if ($('#txt_agent_id_card').val().trim() == '') {
+                layer.msg("请上传身份证");
+                return false;
+            }
+             if ($('#txt_agent_commitment_letter').val().trim() == '') {
+                layer.msg("请上传承诺函");
+                return false;
+            }
+            return true;
+        }
+
+        function Save()
+        {
+            if (fromcheck()) {
+                var data = {
+                    AGENT_ID:$("#hidAgentID").val(),
+                    AGENT_NAME: $('#txtAgent').val().trim(),
+                    AGENT_ACCOUNT:$('#txtAgentAccount').val().trim(),
+                    AGENT_AREA:$('#txtAgentArea').val().trim(),
+                    AGENT_CONTACTS:$('#txtAgentContract').val().trim(),
+                    AGENT_TEL:$('#txtAgentTel').val().trim(),
+                    AGENT_BUSINESS_LICENSE:$('#txt_agent_business_license').val().trim(),
+                    AGENT_ID_CARD:$('#txt_agent_id_card').val().trim(),
+                    AGENT_COMMITMENT_LETTER:$('#txt_agent_commitment_letter').val().trim(),
+                };
+                var newdata = {
+                    data:JSON.stringify(data)
+                }
+             $.ajax({
+                   url: '@Url.Content("~/Agent/SaveAgent")',
+                   data: newdata,
+                   type: 'post',
+                   dataType: 'json',
+                   success(data) {
+                       if (data.error == 1) {
+                           layer.closeAll();
+                           $('.edit_dialog').hide();
+                           layer.msg(data.msg, { icon: 1, time: 1500 }, function () {
+                               changePostList(1);
+                           });
+                       } else {
+                            layer.msg(data.msg, { icon: 2, time: 1500 });
+                       }
+                   }
+              });
+            }
+
+        }
+
+        function InnitUpload(elm) {
+            var uploadInst = this.render({
+                accept: "images",
+                elem: "#" + elm,
+                url: "@Url.Content("~/Agent/UploadImg")",
+                before: function () {
+                },
+                done: function (res) {
+                    layer.msg(res.msg, { icon: 1, time: 1500 }, function () {
+                        $("#" + elm).siblings("img").show().prop("src",  res.data.src)
+                        $("#" + elm).siblings("input[name=img]").val(res.data.src);
+                    });
+                },
+                error: function () {
+                    layer.msg("图片上传失败.", { icon: 2 });
+                }
+            });
+        }
+
+        function disableAgent(Agent_ID)
+        {
+             var newdata = {
+                    Agent_ID: Agent_ID
+                }
+               $.ajax({
+                   url: '@Url.Content("~/Agent/DisableAgent")',
+                   data: newdata,
+                   type: 'post',
+                   dataType: 'json',
+                   success(data) {
+                      if (data.error == 1) {
+                           layer.closeAll();
+                          layer.msg(data.msg, { icon: 1, time: 1500 }, function () {
+                              var pageIndex=  $("#nowPageIndex").val();
+                              changePostList(pageIndex);
+                           });
+                       } else {
+                            layer.msg(data.msg, { icon: 2, time: 1500 });
+                       }
+                   }
+              });
+
+        }
+
+        function ableAgent(Agent_ID)
+        {
+             var newdata = {
+                    Agent_ID: Agent_ID
+                }
+               $.ajax({
+                   url: '@Url.Content("~/Agent/AbleAgent")',
+                   data: newdata,
+                   type: 'post',
+                   dataType: 'json',
+                   success(data) {
+                      if (data.error == 1) {
+                           layer.closeAll();
+                          layer.msg(data.msg, { icon: 1, time: 1500 }, function () {
+                              var pageIndex=  $("#nowPageIndex").val();
+                              changePostList(pageIndex);
+                           });
+                       } else {
+                            layer.msg(data.msg, { icon: 2, time: 1500 });
+                       }
+                   }
+              });
+
+        }
+
+        $(function () {
+             $('#btnCancel').on("click", function () {
+                    layer.closeAll();
+                    $('.edit_dialog').hide();
+             });
+
+             $('#btnSave').on("click", function () {
+                 Save();
+             });
+
+
+        });
+    </script>
 </body>
-<script type="text/javascript">
-    loadjs("../../../Scripts/jquery-1.11.1.min.js");
-    loadjs("../../../Scripts/bootstrap.min.js");
-
-    loadjs("../../../Scripts/WebApi.js");
-    loadjs("../../../Scripts/jqPaginator.js");
-    loadjs("../../../Scripts/layer.js");
-
-    loadjs("user.js");
-</script>
 </html>

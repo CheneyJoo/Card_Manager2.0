@@ -4,7 +4,7 @@ using SYSEntity;
 using System;
 using System.Collections.Generic;
 using System.Data;
-namespace SYS.Business.cardmanage
+namespace Service
 {
     public class Agent
     {
@@ -21,7 +21,10 @@ namespace SYS.Business.cardmanage
                 int userID = 0;
                 if (!String.IsNullOrEmpty(tB_DATA_AGENT.AGENT_ACCOUNT))
                 {
-                    userID = Gateway.Default.Find<Xt_zhb>(Xt_zhb._.Zh == tB_DATA_AGENT.AGENT_ACCOUNT).Id;
+                    var obj = Gateway.Default.Find<Xt_zhb>(Xt_zhb._.Zh == tB_DATA_AGENT.AGENT_ACCOUNT);
+                    if (obj != null) {
+                        userID = obj.Id;
+                    }
                 }
                 //如果不是修改代理商，需先创建指定用户
                 if (!tB_DATA_AGENT.IsAttached())
@@ -43,6 +46,7 @@ namespace SYS.Business.cardmanage
                 }
                 else
                 {
+                    tB_DATA_AGENT.USER_ID = Gateway.Default.Find<TB_DATA_AGENT>(TB_DATA_AGENT._.AGENT_ID == tB_DATA_AGENT.AGENT_ID).USER_ID;
                     if (String.IsNullOrEmpty(tB_DATA_AGENT.USER_ID))
                     {
                         Xt_zhb xt_Zhb = new Xt_zhb();
@@ -110,7 +114,7 @@ namespace SYS.Business.cardmanage
         /// <returns></returns>
         public DataTable QueryOneAgentInfo(String Agent_ID)
         {
-            String SQL = @"SELECT [AGENT_ID],[USER_ID],[AGENT_NO],[AGENT_NAME],[AGENT_CARD_NUMBER],[AGENT_AREA],[AGENT_CONTACTS],[AGENT_TEL],[AGENT_BUSINESS_LICENSE]
+            String SQL = @"SELECT [AGENT_ID],[USER_ID],[AGENT_NO],[AGENT_NAME],[AGENT_ACCOUNT],[AGENT_CARD_NUMBER],[AGENT_AREA],[AGENT_CONTACTS],[AGENT_TEL],[AGENT_BUSINESS_LICENSE]
                             ,[AGENT_ID_CARD],[AGENT_COMMITMENT_LETTER],[STATUS] FROM [dbo].[TB_DATA_AGENT] WHERE AGENT_ID=@AGENT_ID";
 
             return Gateway.Default.FromCustomSql(SQL).AddInputParameter("AGENT_ID", DbType.String, Agent_ID).ToDataSet().Tables[0];
