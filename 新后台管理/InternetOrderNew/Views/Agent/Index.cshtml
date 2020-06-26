@@ -9,10 +9,11 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="~/Content/assets/css/layui.css?v=2">
-    <link rel="stylesheet" href="~/Content/assets/font2/iconfont.css">
-    <link rel="stylesheet" href="~/Content/assets/css/view.css" />
-    <link rel="stylesheet" href="~/Content/assets/css/admin.css" />
+    <link href="~/Content/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/bootstrap-override.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/format.table.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/radio-checkbox-style.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/view.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico">
     <title></title>
     <script src="~/Scripts/jquery-1.8.2.min.js"></script>
@@ -20,47 +21,52 @@
         body {
             overflow-y: scroll;
         }
+
+        .input-group {
+            width: 100%
+        }
     </style>
 </head>
-<body class="layui-view-body">
-    <div class="layui-content">
-        <div class="layui-page-header">
-            <div class="pagewrap">
-                <span class="layui-breadcrumb">
-                    <a href="">基本设置</a>
-                    <a class="on">代理商管理</a>
-                </span>
-            </div>
-        </div>
-        <div class="tool_pannel">
-            <form class="layui-form">
-                <div class="layui-form-item">
-                    <div class="layui-form-inline">
-                        <label class="layui-form-label">代理商：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" maxlength="20" class="layui-input" id="txtagentname" placeholder="代理商" />
-                        </div>
-                    </div>
-                    <div class="layui-form-inline">
-                        <a class="layui-btn layui-btn-blue" onclick="changePostList(1)"><i class="iconfont icon-sousuo"></i>搜索</a>
-                        <a class="layui-btn layui-btn-blue" onclick="showDialog(0)"><i class="iconfont icon-sousuo"></i>新增</a>
-                        <a class="layui-btn layui-btn-blue" onclick="deleteAgents()"><i class="iconfont icon-sousuo"></i>删除</a>
+<body>
+    <div class="col-sm-12" style="padding-top: 15px;">
+        <div class="query-table">
+            <div class="row">
+                <div class="col-sm-6 col-lg-4 col-md-6">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="txtstudentname">代理商</label>
+                        <input type="text" maxlength="50" class="form-control" id="txtagentname" placeholder="请输入代理商" />
                     </div>
                 </div>
-            </form>
+                <div class="col-xs-12 col-sm-6 col-lg-8 col-md-6 col-btn">
+                    <button class="btn  btn-default" id="btnquery" onclick="changePostList(1)">
+                        查询
+                    </button>
+                    <button class="btn  btn-default" id="btnexport" onclick="Export()">
+                        导出
+                    </button>
+                    <button class="btn  btn-default" id="btnadd" onclick="showDialog(0)">
+                        新增
+                    </button>
+                    <button class="btn  btn-default" id="btndelete" onclick="deleteAgents()">
+                        删除
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="table_wrap" id="QueryTab">
-            <table class="layui-table layui-form" lay-skin="nob">
+        <div class="table-responsive" id="QueryTab">
+            <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th style="width: 60px;"><input type="checkbox" name="checkall" /></th>
+                        <th style="width: 60px;">
+                            <input type="checkbox" class="option-input checkbox" id="checkall" />
+                        </th>
                         <th style="width: 60px;">编号</th>
                         <th>代理商</th>
                         <th>卡数量</th>
                         <th>地区</th>
                         <th>联系人</th>
                         <th>电话</th>
-                        <th style="width: 80px;">创建时间</th>
+                        <th style="width: 100px;">创建时间</th>
                         <th style="width: 80px;">营业执照</th>
                         <th style="width: 80px;">身份证</th>
                         <th style="width: 80px;">承诺函</th>
@@ -73,7 +79,7 @@
                         for (int i = 0; i < Model.Rows.Count; i++)
                         {
                             <tr>
-                                <td><input type="checkbox" name="chk_agent" value="@Model.Rows[i]["AGENT_ID"]" /></td>
+                                <td><input type="checkbox" class="option-input checkbox" name="chk_agent" value="@Model.Rows[i]["AGENT_ID"]" /></td>
                                 <td>@Model.Rows[i]["AGENT_NO"]</td>
                                 <td>@Model.Rows[i]["AGENT_NAME"]</td>
                                 <td>@Model.Rows[i]["AGENT_CARD_NUMBER"]</td>
@@ -81,9 +87,11 @@
                                 <td>@Model.Rows[i]["AGENT_CONTACTS"]</td>
                                 <td>@Model.Rows[i]["AGENT_TEL"]</td>
                                 <td>@Convert.ToDateTime(@Model.Rows[i]["CREATED_TIME"]).ToString("yyyy-MM-dd")</td>
-                                <td><img src="@Model.Rows[i]["AGENT_BUSINESS_LICENSE"]" /></td>
-                                <td><img src="@Model.Rows[i]["AGENT_ID_CARD"]" /></td>
-                                <td><img src="@Model.Rows[i]["AGENT_COMMITMENT_LETTER"]" /></td>
+                                <td>
+                                    <img src="@Model.Rows[i]["AGENT_BUSINESS_LICENSE"]" style="width: 50px;height: 50px;" />
+                                </td>
+                                <td><img src="@Model.Rows[i]["AGENT_ID_CARD"]" style="width:50px;height:50px;" /></td>
+                                <td><img src="@Model.Rows[i]["AGENT_COMMITMENT_LETTER"]" style="width:50px;height:50px;" /></td>
                                 <td>@(Convert.ToString(Model.Rows[i]["STATUS"]) == "1" ? "启用" : "停用")</td>
                                 <td>
                                     <a class="text_blue" href="javascript:updatestatus('@Model.Rows[i]["AGENT_ID"]',0)">详情</a>
@@ -105,80 +113,97 @@
             <!-- 分页样式 -->
             @(ViewBag.Pager)
         </div>
+
     </div>
     <!-- 编辑弹窗 -->
     <div class="edit_dialog" style="display:none">
-        <div class="layui-form">
-            <input type="text" id="hidAgentID" hidden="">
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>代理商：</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="txtAgent" class="layui-input" placeholder="请输入代理商">
+        <input type="text" id="hidAgentID" hidden="">
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>代理商：</label>
+                    <input type="text" id="txtAgent" class="form-control" placeholder="请输入代理商">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>联系人：</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="txtAgentContract" class="layui-input" placeholder="请输入代理商联系人">
+        </div>
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>联系人：</label>
+                    <input type="text" id="txtAgentContract" class="form-control" placeholder="请输入代理商联系人">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>账号：</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="txtAgentAccount" class="layui-input" placeholder="请输入代理商账号">
+        </div>
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>账号：</label>
+                    <input type="text" id="txtAgentAccount" class="form-control" placeholder="请输入代理商账号">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>电话：</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="txtAgentTel" class="layui-input" placeholder="请输入代理商电话">
+        </div>
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>电话：</label>
+                    <input type="text" id="txtAgentTel" class="form-control" placeholder="请输入代理商电话">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>地区：</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="txtAgentArea" class="layui-input" placeholder="请输入代理商地区">
+        </div>
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>地区：</label>
+                    <input type="text" id="txtAgentArea" class="form-control" placeholder="请输入代理商地区">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>营业执照：</label>
-                <div class="layui-input-inline">
-                    <img title="营业执照" alt="营业执照" id="img_agent_business_license" src="" style="display:none;width:100px;height:100px;" />
-                    <button id="BtnUpload1" type="button" class="layui-btn"><i class="layui-icon">&#xe67c;</i>浏览</button>
+        </div>
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>营业执照：</label>
+                    <img title="营业执照" alt="营业执照" id="img_agent_business_license" src="" style="display:none;width:100px;height:100px;margin-right:20px" />
+                    <button class="btn btn-default2 btn_base2" id="BtnUpload1">+&nbsp;浏览</button>
                     <input type="hidden" id="txt_agent_business_license" name="img" value="" />
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>身份证：</label>
-                <div class="layui-input-inline">
-                    <img title="身份证" alt="身份证" id="img_agent_id_card" src="" style="display:none;width:100px;height:100px;" />
-                    <button id="BtnUpload2" type="button" class="layui-btn"><i class="layui-icon">&#xe67c;</i>浏览</button>
+        </div>
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>身份证：</label>
+                    <img title="身份证" alt="身份证" id="img_agent_id_card" src="" style="display:none;width:100px;height:100px;margin-right:20px" />
+                    <button class="btn btn-default2 btn_base2" id="BtnUpload2">+&nbsp;浏览</button>
                     <input type="hidden" id="txt_agent_id_card" name="img" value="" />
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="text_star">*</span>承诺函：</label>
-                <div class="layui-input-inline">
-                    <img title="承诺函" alt="承诺函" id="img_agent_commitment_letter" src="" style="display:none;width:100px;height:100px;" />
-                    <button id="BtnUpload3" type="button" class="layui-btn"><i class="layui-icon">&#xe67c;</i>浏览</button>
+        </div>
+        <div class="section" style="padding-bottom: 10px;">
+            <div class="col">
+                <div class="input-group ">
+                    <label><span class="require">*</span>承诺函：</label>
+                    <img title="承诺函" alt="承诺函" id="img_agent_commitment_letter" src="" style="display:none;width:100px;height:100px;margin-right:20px" />
+                    <button class="btn btn-default2 btn_base2" id="BtnUpload3">+&nbsp;浏览</button>
                     <input type="hidden" id="txt_agent_commitment_letter" name="img" value="" />
                 </div>
             </div>
-            <div class="buttonwrap">
-                <a href="javascript:;" class="layui-btn layui-btn-blue yes" id="btnSave">保存</a>
-                <a href="javascript:;" class="layui-btn layui-btn-primary close" id="btnCancel">取消</a>
+        </div>
+        <div class="section" style="padding-top: 10px;">
+            <div class="col" style="text-align: center;">
+                <button type="button" class="btn btn-default" id="btnSave">确定</button>
+                <button type="button" class="btn btn-default" id="btnCancel">取消</button>
             </div>
         </div>
     </div>
     <input type="hidden" id="nowPageIndex" value="1" />
+    <div style="visibility:hidden;">
+        <a href="/" id="export"><span id="pexport">导出</span></a>
+    </div>
     <script src="~/Content/assets/jquery.js?type=1.1"></script>
     <script src="~/Content/assets/layui.all.js?type=1.1"></script>
     <script src="~/Content/assets/lay/modules/laydate.js?type=1.1"></script>
-    <script src="~/Content/Js/index.js?type=1.1"></script>
-    <script src="~/Content/Js/jiaohu.js?type=1.1"></script>
     <script type="text/javascript">
         function changePostList(page) {
-
             var agentname = $("#txtagentname").val();
             $("#nowPageIndex").val(page);
             $.ajax({
@@ -187,7 +212,10 @@
                    type: 'post',
                    dataType: 'html',
                    success(data) {
-                    $("#QueryTab").html(data);
+                       $("#QueryTab").html(data);
+                        $('#checkall').on("click",function () {
+	                        $('input[name="chk_agent"]').prop("checked", this.checked);
+	                    });
                    }
               });
         }
@@ -383,7 +411,6 @@
                        }
                    }
               });
-
         }
 
         function ableAgent(Agent_ID)
@@ -411,6 +438,49 @@
 
         }
 
+        function deleteAgents() {
+            if ($('input[name=chk_agent]:checked').length > 0) {
+                layer.confirm('你确定要删除这些代理商吗 ？', {
+                    btn: ['是', '否'] //按钮
+                }, function () {
+                    var agentList = '';
+                    $('input[name=chk_agent]:checked').each(function () {
+                        agentList += $(this).val() + ",";
+                    });
+
+                    var newdata = {
+                        agentList: agentList
+                    };
+                    $.ajax({
+                        url: '@Url.Content("~/Agent/DeleteAgent")',
+                        data: newdata,
+                        type: 'post',
+                        dataType: 'json',
+                        success(data) {
+                            if (data.error == 1) {
+                                layer.closeAll();
+                                layer.msg(data.msg, { icon: 1, time: 1500 }, function () {
+                                    var pageIndex = $("#nowPageIndex").val();
+                                    changePostList(pageIndex);
+                                });
+                            } else {
+                                layer.msg(data.msg, { icon: 2, time: 1500 });
+                            }
+                        }
+                    });
+                });
+            } else {
+                 layer.msg('请至少选择一条记录进行操作', { icon: 2, time: 1500 });
+            }
+        }
+
+        function Export() {
+            var agentname = $("#txtagentname").val();
+            var url = '@Url.Content("~/Agent/ExportExcel")' + "?agentname=" + agentname;
+            $('#export').attr('href',url);
+            $('#pexport').click();
+        }
+
         $(function () {
              $('#btnCancel').on("click", function () {
                     layer.closeAll();
@@ -421,7 +491,17 @@
                  Save();
              });
 
-
+            $('#checkall').on("click",function () {
+	            $('input[name="chk_agent"]').prop("checked", this.checked);
+            });
+            $('input[type="file"]').css({
+                "opacity": "0",
+                "width": "100%",
+                "height": "100%",
+                "position": "absolute0",
+                "top": "0",
+                "left": "0"
+            });
         });
     </script>
 </body>

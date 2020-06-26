@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="cardmanage\Agent.cs" />
     <Compile Include="cardmanage\Card.cs" />
+    <Compile Include="cardmanage\Recharge.cs" />
     <Compile Include="CSService.cs" />
     <Compile Include="DdJbxxService.cs" />
     <Compile Include="DdJyjlbService.cs" />

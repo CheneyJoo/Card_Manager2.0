@@ -1,0 +1,49 @@
+﻿
+@{
+    Layout = null;
+}
+@using System.Data
+@model DataTable
+<div class="table-responsive" id="QueryTab">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 60px;">
+                    <input type="checkbox" class="option-input checkbox" id="checkall" />
+                </th>
+                <th style="width: 60px;">编号</th>
+                <th>品牌</th>
+                <th>运营商</th>
+                <th>代理商</th>
+                <th>卡号</th>
+                <th>充值金额</th>
+                <th style="width: 100px;">充值时间</th>
+                <th style="width: 80px;">套餐</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="user-tb">
+            @{
+                for (int i = 0; i < Model.Rows.Count; i++)
+                {
+                    <tr>
+                        <td><input type="checkbox" class="option-input checkbox" name="chk_recharge" value="@Model.Rows[i]["RECHARGE_ID"]" /></td>
+                        <td>@Model.Rows[i]["NO"]</td>
+                        <td>@Model.Rows[i]["BRAND_NAME"]</td>
+                        <td>@Model.Rows[i]["SERVICE_PROVIDER"]</td>
+                        <td>@Model.Rows[i]["AGENT_NAME"]</td>
+                        <td>@Model.Rows[i]["CARD_NO"]</td>
+                        <td>@Model.Rows[i]["RECHARGE_MONEY"]</td>
+                        <td>@Convert.ToDateTime(@Model.Rows[i]["RECHARGE_DATE"]).ToString("yyyy-MM-dd")</td>
+                        <td>@Model.Rows[i]["PACKAGE_NAME"]</td>
+                        <td>
+                            <a class="text_blue" href="javascript:deleteOneRecharge('@Model.Rows[i]["RECHARGE_ID"]')">删除</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <!-- 分页样式 -->
+    @(ViewBag.Pager)
+</div>

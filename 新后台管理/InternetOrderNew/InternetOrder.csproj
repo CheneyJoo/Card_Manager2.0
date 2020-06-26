@@ -339,6 +339,7 @@
     <Content Include="Content\template\企业套餐模板.xls" />
     <Content Include="Content\template\导入套餐模板.xls" />
     <Content Include="Content\template\组合项目模板.xls" />
+    <Content Include="Content\template\消费模板.xlsx" />
     <None Include="Properties\PublishProfiles\微信公共号平台.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Images\accent.png" />
@@ -392,6 +393,7 @@
     <Compile Include="Controllers\OrganController.cs" />
     <Compile Include="Controllers\QudaoController.cs" />
     <Compile Include="Controllers\QyController.cs" />
+    <Compile Include="Controllers\RechargeController.cs" />
     <Compile Include="Controllers\ReportQdController.cs" />
     <Compile Include="Controllers\ReportQyController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
@@ -508,6 +510,8 @@
     <Content Include="Views\Qudao\Update.cshtml" />
     <Content Include="Views\Agent\Index.cshtml" />
     <Content Include="Views\Agent\List.cshtml" />
+    <Content Include="Views\Recharge\Index.cshtml" />
+    <Content Include="Views\Recharge\List.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

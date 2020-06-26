@@ -15,7 +15,7 @@ namespace InternetOrder.Controllers
     public class AgentController : BaseController
     {
         // GET: Agent
-        public ActionResult Index(int rows=10, int page=1, int maxpages=10, string agentname="")
+        public ActionResult Index(int rows = 10, int page = 1, int maxpages = 10, string agentname = "")
         {
             return View(GetAgentList(rows, page, maxpages, agentname));
         }
@@ -116,7 +116,7 @@ namespace InternetOrder.Controllers
                 queryStr.Add("AGENT_NAME", agentname);
             }
             result = agentBll.QueryAgent(rows, page, queryStr);
-            ViewBag.Pager = PagingNewHelper.ShowFPageForBootstrapAdmin(page, PageSize, int.Parse(result["totalRow"].ToString()));//生成分页条      
+            ViewBag.Pager = PagingNewHelper.ShowFPageForBootstrapAdmin(page, rows, int.Parse(result["totalRow"].ToString()));//生成分页条      
             DataTable dataTable = result["table"] as DataTable;
             for (int i = 0; i < dataTable.Rows.Count; i++)
             {
@@ -178,6 +178,58 @@ namespace InternetOrder.Controllers
         public ActionResult List(int rows, int page, int maxpages, string agentname)
         {
             return View(GetAgentList(rows, page, maxpages, agentname));
+        }
+
+        /// <summary>
+        /// 删除代理商
+        /// </summary>
+        /// <param name="agentList"></param>
+        /// <returns></returns>
+        public JsonResult DeleteAgent(String agentList)
+        {
+            String CurrUser = HttpContext.Session["UserId"].ToString();
+            Agent agentBll = new Agent();
+            int flag = agentBll.DeleteAgent(agentList, CurrUser);
+            if (flag == 1)
+            {
+                return Json(new { error = 1, msg = "删除成功" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { error = 0, msg = "删除失败" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        /// <param name="agentname"></param>
+        /// <returns></returns>
+        public FileResult ExportExcel(string agentname = "")
+        {
+
+            Agent agentBll = new Agent();
+            Dictionary<string, string> queryStr = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(agentname))
+            {
+                queryStr.Add("AGENT_NAME", agentname);
+            }
+            DataTable dtExport = agentBll.ExportAgent(queryStr);
+            for (int i = 0; i < dtExport.Rows.Count; i++)
+            {
+                dtExport.Rows[i]["编号"] = i + 1;
+            }
+            if (dtExport.Rows.Count > 0)
+            {
+                dtExport.TableName = "代理商数据";
+                MemoryStream ms = Common.ExcelTool.RenderToExcel(dtExport);
+                ms.Seek(0, SeekOrigin.Begin);
+                return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyy-MM-dd") + "代理商数据.xls");
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

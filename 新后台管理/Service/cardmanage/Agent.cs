@@ -22,7 +22,8 @@ namespace Service
                 if (!String.IsNullOrEmpty(tB_DATA_AGENT.AGENT_ACCOUNT))
                 {
                     var obj = Gateway.Default.Find<Xt_zhb>(Xt_zhb._.Zh == tB_DATA_AGENT.AGENT_ACCOUNT);
-                    if (obj != null) {
+                    if (obj != null)
+                    {
                         userID = obj.Id;
                     }
                 }
@@ -36,8 +37,8 @@ namespace Service
                     Xt_zhb xt_Zhb = new Xt_zhb();
                     xt_Zhb.Zh = tB_DATA_AGENT.AGENT_ACCOUNT;
                     xt_Zhb.Mm = "E10ADC3949BA59ABBE56E057F20F883E";
-                    xt_Zhb.Dh= tB_DATA_AGENT.AGENT_TEL;
-                    xt_Zhb.Lxr= tB_DATA_AGENT.AGENT_NAME;
+                    xt_Zhb.Dh = tB_DATA_AGENT.AGENT_TEL;
+                    xt_Zhb.Lxr = tB_DATA_AGENT.AGENT_NAME;
                     xt_Zhb.Jsid = 2;
                     xt_Zhb.Createtime = DateTime.Now;
                     Gateway.Default.Save<Xt_zhb>(xt_Zhb);
@@ -97,6 +98,29 @@ namespace Service
                     .AddInputParameter("STATUS", System.Data.DbType.Int32, STATUS)
                     .AddInputParameter("LAST_UPDATED_BY", System.Data.DbType.String, Updated_By)
                     .AddInputParameter("AGENT_ID", System.Data.DbType.String, Agent_ID)
+                    .ExecuteNonQuery();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                Log.WriteLog(ex.Message);
+                return 0;
+            }
+        }
+        /// <summary>
+        /// 批量删除代理商
+        /// </summary>
+        /// <param name="Agent_IDs"></param>
+        /// <param name="Updated_By"></param>
+        /// <param name="STATUS"></param>
+        /// <returns></returns>
+        public int DeleteAgent(String Agent_IDs, String Updated_By)
+        {
+            String sql = "update TB_DATA_AGENT set STATUS=-1,LAST_UPDATED_BY=@LAST_UPDATED_BY,LAST_UPDATED_TIME=GETDATE() where AGENT_ID in("+ "'" + String.Join("','", Agent_IDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) + "'" + ")";
+            try
+            {
+                Gateway.Default.FromCustomSql(sql)
+                    .AddInputParameter("LAST_UPDATED_BY", System.Data.DbType.String, Updated_By)
                     .ExecuteNonQuery();
                 return 1;
             }
